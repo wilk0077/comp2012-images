@@ -1,0 +1,3314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMP1103 UX Fundamentals — Interactive Concept Map</title>
+  <style>
+    /* =========================================================================
+       COMP1103 UX Fundamentals — Interactive Visual Node-and-Edge Concept Map
+       Self-contained, zero-dependency build for Canvas LMS iframe embedding
+       ========================================================================= */
+
+    :root {
+      /* Brand & Semantic Palette */
+      --navy: #232D4B;
+      --navy-deep: #182038;
+      --navy-soft: #EEF1F8;
+      --gold: #FFD300;
+      --gold-deep: #CB9828;
+      --gold-ink: #845D08;
+      --gold-soft: #FFF8DC;
+      --sand: #F6EEE1;
+
+      /* Typed Linkage Colours */
+      --teal: #0D7A5F;         /* Artefact Handoffs */
+      --teal-soft: #E5F5F0;
+      --theory-gold: #CB9828;  /* Theory -> Practice Bridges */
+      --theory-soft: #FDF5DF;
+      --indigo: #4355B9;       /* Research & Evaluation Spiral */
+      --indigo-soft: #ECEFFD;
+      --amber: #D97706;        /* Ethics & Security (TLO4) Thread */
+      --amber-soft: #FEF3C7;
+      --amber-ink: #92400E;
+
+      /* Canvas & Surface Tokens */
+      --canvas-bg: #FAF8F4;
+      --canvas-dot: #DCD8CE;
+      --surface: #FFFFFF;
+      --border: #DFDFEA;
+      --border-strong: #C6CCDC;
+      --text: #1E2536;
+      --text-muted: #58627A;
+      --backbone: #C1C9DC;
+
+      /* Geometry & Elevation */
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-pill: 999px;
+      --shadow-node: 0 3px 10px rgba(24, 32, 56, 0.06);
+      --shadow-node-hover: 0 8px 22px rgba(24, 32, 56, 0.13);
+      --shadow-float: 0 10px 28px rgba(24, 32, 56, 0.16);
+      --ease: 190ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background: var(--canvas-bg);
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--gold-deep);
+      outline-offset: 2px;
+    }
+
+    /* =========================================================================
+       1. APP SHELL & SLIM TOP NAVY HEADER
+       ========================================================================= */
+    .app-shell {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      min-height: 600px;
+      width: 100%;
+      overflow: hidden;
+      background: var(--canvas-bg);
+    }
+
+    .app-shell.is-fullscreen-fallback {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .top-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.55rem 1rem;
+      padding: 0.58rem 1.15rem;
+      background: var(--navy);
+      color: #FFFFFF;
+      border-bottom: 3px solid var(--gold);
+      flex-shrink: 0;
+      z-index: 30;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+
+    .topic-badge {
+      background: var(--gold);
+      color: var(--navy-deep);
+      font-weight: 800;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      padding: 0.24rem 0.5rem;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .brand-titles {
+      min-width: 0;
+    }
+
+    .header-title {
+      margin: 0;
+      font-size: 0.96rem;
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .header-subtitle {
+      margin: 0.08rem 0 0;
+      font-size: 0.71rem;
+      color: #C9D2E8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 4-Mode Node Lens Pill Switcher */
+    .lens-switcher {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.11);
+      padding: 0.18rem;
+      border-radius: var(--radius-pill);
+      gap: 0.14rem;
+    }
+
+    .lens-btn {
+      border: none;
+      background: transparent;
+      color: #DCE3F4;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 0.3rem 0.72rem;
+      border-radius: var(--radius-pill);
+      transition: background var(--ease), color var(--ease);
+      white-space: nowrap;
+    }
+
+    .lens-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+    }
+
+    .lens-btn.is-active {
+      background: var(--gold);
+      color: var(--navy-deep);
+    }
+
+    .lens-btn[data-lens="theory"].is-active {
+      background: #E2E6FF;
+      color: var(--navy-deep);
+    }
+
+    .lens-btn[data-lens="practice"].is-active {
+      background: #CBEFE4;
+      color: #074C3A;
+    }
+
+    .lens-btn[data-lens="laws"].is-active {
+      background: var(--gold);
+      color: var(--navy-deep);
+    }
+
+    /* Header Right Utilities */
+    .header-utilities {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex-shrink: 0;
+    }
+
+    .progress-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      background: rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-pill);
+      padding: 0.25rem 0.68rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #F0F3FA;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .fullscreen-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      height: 30px;
+      padding: 0 0.6rem;
+      border-radius: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: background var(--ease);
+    }
+
+    .fullscreen-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    /* =========================================================================
+       2. TYPED LINK-LAYER TOGGLE BAR (BENEATH HEADER)
+       ========================================================================= */
+    .layer-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.45rem 0.75rem;
+      padding: 0.48rem 1.15rem;
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 25;
+    }
+
+    .layer-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.42rem;
+    }
+
+    .layer-bar-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-right: 0.15rem;
+    }
+
+    .layer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      padding: 0.28rem 0.68rem;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-strong);
+      background: var(--surface);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: background var(--ease), border-color var(--ease), color var(--ease), box-shadow var(--ease);
+      white-space: nowrap;
+    }
+
+    .layer-pill:hover {
+      border-color: var(--navy);
+      background: var(--navy-soft);
+    }
+
+    .line-swatch {
+      width: 22px;
+      height: 10px;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+
+    /* Active states per typed layer */
+    .layer-pill[data-layer="handoff"].is-active {
+      background: var(--teal-soft);
+      border-color: var(--teal);
+      color: #075340;
+      box-shadow: 0 0 0 1px rgba(13, 122, 95, 0.2);
+    }
+
+    .layer-pill[data-layer="theory"].is-active {
+      background: var(--theory-soft);
+      border-color: var(--theory-gold);
+      color: var(--gold-ink);
+      box-shadow: 0 0 0 1px rgba(203, 152, 40, 0.25);
+    }
+
+    .layer-pill[data-layer="spiral"].is-active {
+      background: var(--indigo-soft);
+      border-color: var(--indigo);
+      color: #2B398A;
+      box-shadow: 0 0 0 1px rgba(67, 85, 185, 0.22);
+    }
+
+    .layer-pill[data-layer="ethics"].is-active {
+      background: var(--amber-soft);
+      border-color: var(--amber);
+      color: var(--amber-ink);
+      box-shadow: 0 0 0 1px rgba(217, 119, 6, 0.25);
+    }
+
+    .layer-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .quick-action-btn {
+      padding: 0.27rem 0.65rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-strong);
+      background: var(--canvas-bg);
+      color: var(--navy);
+      font-size: 0.73rem;
+      font-weight: 700;
+      transition: background var(--ease), color var(--ease), border-color var(--ease);
+      white-space: nowrap;
+    }
+
+    .quick-action-btn:hover {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+
+    .quick-action-btn.is-all-on {
+      background: var(--navy);
+      color: var(--gold);
+      border-color: var(--navy);
+    }
+
+    /* =========================================================================
+       3. ETHICS & SECURITY (TLO4) INLINE BANNER
+       ========================================================================= */
+    .ethics-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.52rem 1.15rem;
+      background: #FFFBEB;
+      border-bottom: 1.5px solid #F59E0B;
+      color: #78350F;
+      font-size: 0.78rem;
+      flex-shrink: 0;
+      z-index: 22;
+    }
+
+    .ethics-banner[hidden] {
+      display: none;
+    }
+
+    .ethics-banner-content {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .ethics-banner-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--amber);
+      color: #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ethics-banner-close {
+      border: 1px solid rgba(146, 64, 14, 0.25);
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--amber-ink);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      font-size: 1rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ethics-banner-close:hover {
+      background: var(--amber);
+      color: #FFFFFF;
+    }
+
+    /* =========================================================================
+       4. FULL-BLEED DOT-GRID VISUAL MAP STAGE
+       ========================================================================= */
+    .map-stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      background-color: var(--canvas-bg);
+      background-image: radial-gradient(var(--canvas-dot) 1.3px, transparent 1.3px);
+      background-size: 22px 22px;
+      padding: 0.85rem 1.3rem 5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stage-hint-row {
+      width: 100%;
+      max-width: 1180px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem 1rem;
+      margin-bottom: 0.35rem;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .stage-caption {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 0.25rem 0.72rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: auto;
+    }
+
+    .hint-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.42rem;
+      background: var(--navy);
+      color: #FFFFFF;
+      border-radius: var(--radius-pill);
+      padding: 0.26rem 0.78rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(24, 32, 56, 0.14);
+      pointer-events: auto;
+      transition: opacity 250ms ease, transform 250ms ease;
+    }
+
+    .hint-pill.is-hidden {
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: softPulse 1.8s infinite;
+    }
+
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: 0.6; }
+    }
+
+    /* Graph Canvas (extra top & side padding gives outer arcs clean breathing room) */
+    .graph-canvas {
+      position: relative;
+      width: 100%;
+      max-width: 1180px;
+      margin: auto 0;
+      padding: 2.3rem 2.75rem 0.8rem;
+    }
+
+    .edges-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 3; /* Above lane backgrounds, cleanly coordinated with nodes */
+      overflow: visible;
+    }
+
+    /* Backbone paths */
+    .backbone-path {
+      fill: none;
+      stroke: var(--backbone);
+      stroke-width: 2;
+      stroke-linecap: round;
+      opacity: 0.88;
+      transition: opacity var(--ease), stroke var(--ease);
+    }
+
+    .backbone-path.is-dimmed {
+      opacity: 0.16;
+    }
+
+    /* Typed visible edge paths */
+    .typed-edge {
+      fill: none;
+      stroke-linecap: round;
+      transition: opacity var(--ease), stroke-width var(--ease), filter var(--ease);
+      pointer-events: none;
+    }
+
+    .typed-edge.type-handoff {
+      stroke: var(--teal);
+      stroke-width: 2.3;
+    }
+
+    .typed-edge.type-theory {
+      stroke: var(--theory-gold);
+      stroke-width: 2.3;
+      stroke-dasharray: 7 4;
+    }
+
+    .typed-edge.type-spiral {
+      stroke: var(--indigo);
+      stroke-width: 2.4;
+      stroke-dasharray: 2.2 5;
+    }
+
+    .typed-edge.is-hidden-edge {
+      opacity: 0;
+    }
+
+    .typed-edge.is-dimmed {
+      opacity: 0.14;
+    }
+
+    .typed-edge.is-ego {
+      opacity: 0.94;
+      stroke-width: 2.6;
+    }
+
+    .typed-edge.is-active-edge {
+      opacity: 1;
+      stroke-width: 3.6;
+      filter: drop-shadow(0 2px 5px rgba(24, 32, 56, 0.22));
+    }
+
+    /* Wide transparent SVG hit target for easy edge hovering & clicking */
+    .edge-hit-target {
+      fill: none;
+      stroke: transparent;
+      stroke-width: 14px;
+      stroke-linecap: round;
+      pointer-events: stroke;
+      cursor: pointer;
+    }
+
+    .edge-hit-target.is-disabled {
+      pointer-events: none;
+      cursor: default;
+    }
+
+    /* Phase Lanes Stack */
+    .lanes-stack {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 3.35rem;
+      pointer-events: none;
+    }
+
+    .phase-lane {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      padding: 0.72rem 1.05rem 0.95rem;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px dashed rgba(35, 45, 75, 0.13);
+      pointer-events: none;
+    }
+
+    .phase-lane[data-phase="2"] {
+      background: rgba(229, 245, 240, 0.34);
+      border-color: rgba(13, 122, 95, 0.16);
+    }
+
+    .phase-lane[data-phase="3"] {
+      background: rgba(246, 238, 225, 0.52);
+      border-color: rgba(203, 152, 40, 0.24);
+    }
+
+    .lane-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .lane-title-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.48rem;
+      font-size: 0.71rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.055em;
+      color: var(--text-muted);
+    }
+
+    .lane-pill {
+      padding: 0.13rem 0.48rem;
+      border-radius: var(--radius-pill);
+      background: rgba(35, 45, 75, 0.09);
+      color: var(--navy);
+      font-size: 0.66rem;
+    }
+
+    .phase-lane[data-phase="2"] .lane-pill {
+      background: rgba(13, 122, 95, 0.13);
+      color: var(--teal);
+    }
+
+    .phase-lane[data-phase="3"] .lane-pill {
+      background: rgba(203, 152, 40, 0.2);
+      color: var(--gold-ink);
+    }
+
+    .lane-nodes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: stretch;
+      gap: 1.05rem clamp(0.95rem, 2.2vw, 2.15rem);
+      pointer-events: none;
+    }
+
+    /* =========================================================================
+       5. COMPACT MODULE NODES
+       ========================================================================= */
+    .week-node {
+      position: relative;
+      z-index: 4; /* Keeps nodes crisp while edges attach cleanly to borders */
+      pointer-events: auto;
+      width: clamp(152px, 15.8vw, 184px);
+      text-align: left;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.62rem 0.72rem 0.66rem;
+      box-shadow: var(--shadow-node);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      transition:
+        transform var(--ease),
+        border-color var(--ease),
+        box-shadow var(--ease),
+        opacity var(--ease),
+        background-color var(--ease);
+    }
+
+    /* Subtle Lens-specific resting border accents */
+    .lanes-stack[data-lens="theory"] .week-node { border-color: #CBD3F4; }
+    .lanes-stack[data-lens="practice"] .week-node { border-color: #B7E2D5; }
+    .lanes-stack[data-lens="laws"] .week-node { border-color: #EED994; }
+
+    .week-node:hover {
+      transform: translateY(-2px);
+      border-color: var(--navy);
+      box-shadow: var(--shadow-node-hover);
+      z-index: 6;
+    }
+
+    /* Ethics & Security (TLO4) Halo Ring & Shield Badge */
+    .week-node.is-ethics-highlight {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.26), var(--shadow-node);
+      background: #FFFDF7;
+    }
+
+    .ethics-shield-badge {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--amber);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
+      flex-shrink: 0;
+    }
+
+    .week-node.is-ethics-highlight .ethics-shield-badge {
+      display: inline-flex;
+    }
+
+    /* Ego-Network & Edge Highlight States */
+    .week-node.is-dimmed {
+      opacity: 0.32;
+    }
+
+    .week-node.is-connected-peer {
+      opacity: 1;
+      border-color: var(--navy);
+      background: #FFFFFF;
+      box-shadow: 0 5px 16px rgba(35, 45, 75, 0.14);
+    }
+
+    .week-node.is-edge-endpoint {
+      opacity: 1;
+      border-color: var(--navy);
+      box-shadow: 0 0 0 3px rgba(35, 45, 75, 0.18), var(--shadow-node-hover);
+      transform: translateY(-2px);
+      z-index: 6;
+    }
+
+    .week-node.is-selected {
+      opacity: 1;
+      border-color: var(--navy);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3.5px var(--gold), var(--shadow-node-hover);
+      transform: translateY(-2px);
+      z-index: 7;
+    }
+
+    .node-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+    }
+
+    .node-head-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+    }
+
+    .week-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 20px;
+      padding: 0 0.42rem;
+      border-radius: var(--radius-pill);
+      background: var(--navy);
+      color: #FFFFFF;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    .week-node.is-selected .week-pill {
+      background: var(--gold);
+      color: var(--navy-deep);
+    }
+
+    .node-head-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
+    }
+
+    .explored-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--border-strong);
+      transition: background var(--ease), box-shadow var(--ease);
+    }
+
+    .week-node.is-explored .explored-dot {
+      background: var(--gold);
+      box-shadow: 0 0 0 2px var(--navy);
+    }
+
+    .node-title {
+      margin: 0.05rem 0 0;
+      font-size: 0.81rem;
+      font-weight: 700;
+      color: var(--navy-deep);
+      line-height: 1.22;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .node-lens-sub {
+      font-size: 0.69rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      border-radius: 5px;
+      padding: 0.14rem 0.4rem;
+      transition: background var(--ease), color var(--ease);
+    }
+
+    .node-lens-sub.lens-journey {
+      background: var(--gold-soft);
+      color: var(--gold-ink);
+    }
+
+    .node-lens-sub.lens-theory {
+      background: var(--indigo-soft);
+      color: #2B398A;
+    }
+
+    .node-lens-sub.lens-practice {
+      background: var(--teal-soft);
+      color: #075844;
+    }
+
+    .node-lens-sub.lens-laws {
+      background: var(--gold);
+      color: var(--navy-deep);
+      font-weight: 700;
+    }
+
+    .node-assess-row {
+      margin-top: auto;
+      padding-top: 0.12rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.22rem;
+    }
+
+    .mini-assess {
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 0.06rem 0.34rem;
+      border-radius: 4px;
+      background: var(--sand);
+      color: var(--navy);
+      border: 1px solid #E3D3B6;
+    }
+
+    /* =========================================================================
+       6. FLOATING EDGE TOOLTIP & PINNED EDGE POPOVER
+       ========================================================================= */
+    .edge-tooltip {
+      position: fixed;
+      z-index: 60;
+      max-width: 310px;
+      background: var(--navy-deep);
+      color: #FFFFFF;
+      border-radius: 10px;
+      padding: 0.62rem 0.78rem;
+      box-shadow: 0 12px 30px rgba(24, 32, 56, 0.28);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 130ms ease, transform 130ms ease;
+    }
+
+    .edge-tooltip.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .edge-popover {
+      position: fixed;
+      z-index: 65;
+      width: 325px;
+      max-width: calc(100vw - 24px);
+      background: var(--surface);
+      color: var(--text);
+      border: 1.5px solid var(--navy);
+      border-radius: 12px;
+      padding: 0.8rem 0.9rem;
+      box-shadow: 0 16px 38px rgba(24, 32, 56, 0.24);
+    }
+
+    .edge-popover[hidden] {
+      display: none;
+    }
+
+    .edge-meta-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .link-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.045em;
+      padding: 0.14rem 0.48rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .link-type-badge.badge-handoff {
+      background: var(--teal-soft);
+      color: #075340;
+    }
+
+    .link-type-badge.badge-theory {
+      background: var(--theory-soft);
+      color: var(--gold-ink);
+    }
+
+    .link-type-badge.badge-spiral {
+      background: var(--indigo-soft);
+      color: #2B398A;
+    }
+
+    .edge-endpoints {
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.24rem;
+    }
+
+    .edge-tooltip .edge-endpoints {
+      color: var(--gold);
+    }
+
+    .edge-popover .edge-endpoints {
+      color: var(--navy-deep);
+    }
+
+    .edge-reason {
+      margin: 0;
+      font-size: 0.77rem;
+      line-height: 1.4;
+    }
+
+    .edge-tooltip .edge-reason {
+      color: #E3E8F6;
+    }
+
+    .edge-tooltip-cta {
+      margin-top: 0.36rem;
+      font-size: 0.67rem;
+      color: #AEB8D4;
+      font-style: italic;
+    }
+
+    .popover-close {
+      border: 1px solid var(--border);
+      background: var(--canvas-bg);
+      color: var(--text-muted);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popover-close:hover {
+      background: var(--navy);
+      color: #FFFFFF;
+    }
+
+    .popover-actions {
+      display: flex;
+      gap: 0.45rem;
+      margin-top: 0.68rem;
+    }
+
+    .popover-btn {
+      flex: 1;
+      padding: 0.4rem 0.55rem;
+      border-radius: 7px;
+      border: 1px solid var(--border-strong);
+      background: var(--canvas-bg);
+      color: var(--navy);
+      font-size: 0.74rem;
+      font-weight: 700;
+      transition: background var(--ease), color var(--ease), border-color var(--ease);
+    }
+
+    .popover-btn:hover {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+
+    .popover-btn.is-primary {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+
+    .popover-btn.is-primary:hover {
+      background: var(--navy-deep);
+    }
+
+    /* =========================================================================
+       7. FLOATING BOTTOM-RIGHT SELF-PACED STEP NAVIGATION BAR
+       ========================================================================= */
+    .bottom-nav {
+      position: absolute;
+      right: 1.2rem;
+      bottom: 0.95rem;
+      z-index: 28;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-pill);
+      padding: 0.34rem 0.44rem;
+      box-shadow: var(--shadow-float);
+    }
+
+    .step-btn {
+      border: 1px solid var(--border-strong);
+      background: var(--canvas-bg);
+      color: var(--navy);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.34rem 0.75rem;
+      border-radius: var(--radius-pill);
+      transition: background var(--ease), color var(--ease), border-color var(--ease);
+      white-space: nowrap;
+    }
+
+    .step-btn:hover:not(:disabled) {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+
+    .step-btn.is-primary {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+
+    .step-btn.is-primary:hover:not(:disabled) {
+      background: var(--navy-deep);
+    }
+
+    .step-btn:disabled {
+      opacity: 0.36;
+      cursor: not-allowed;
+    }
+
+    .week-indicator-btn {
+      border: none;
+      background: transparent;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--navy);
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+    }
+
+    .week-indicator-btn:hover {
+      background: var(--navy-soft);
+    }
+
+    /* =========================================================================
+       8. SLIDE-OVER MODULE DETAIL DRAWER
+       ========================================================================= */
+    .drawer-scrim {
+      position: absolute;
+      inset: 0;
+      background: rgba(24, 32, 56, 0.16);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 210ms ease;
+      z-index: 40;
+    }
+
+    .drawer-scrim.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .detail-drawer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 425px;
+      max-width: 95vw;
+      background: var(--surface);
+      border-left: 1px solid var(--border-strong);
+      box-shadow: -14px 0 38px rgba(24, 32, 56, 0.18);
+      z-index: 45;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(104%);
+      transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .detail-drawer.is-open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 0.95rem 1.15rem 0.85rem;
+      background: var(--canvas-bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .drawer-top-bar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.65rem;
+    }
+
+    .drawer-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.32rem;
+      margin-bottom: 0.34rem;
+    }
+
+    .drawer-phase-pill {
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.16rem 0.48rem;
+      border-radius: var(--radius-pill);
+      background: var(--navy);
+      color: var(--gold);
+    }
+
+    .drawer-assess-pill {
+      font-size: 0.66rem;
+      font-weight: 800;
+      padding: 0.14rem 0.44rem;
+      border-radius: 5px;
+      background: var(--sand);
+      border: 1px solid #DFCCA8;
+      color: var(--navy);
+    }
+
+    .drawer-title {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: var(--navy-deep);
+      line-height: 1.24;
+    }
+
+    .drawer-close-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .drawer-close-btn:hover {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+    }
+
+    .drawer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.68rem;
+    }
+
+    .explored-toggle-btn {
+      padding: 0.34rem 0.72rem;
+      border-radius: 7px;
+      border: 1.5px solid var(--gold-deep);
+      background: var(--gold);
+      color: var(--navy-deep);
+      font-size: 0.75rem;
+      font-weight: 700;
+      transition: filter var(--ease), background var(--ease), color var(--ease);
+    }
+
+    .explored-toggle-btn:hover {
+      filter: brightness(0.96);
+    }
+
+    .explored-toggle-btn.is-done {
+      background: var(--teal-soft);
+      border-color: var(--teal);
+      color: #075340;
+    }
+
+    .drawer-step-group {
+      display: inline-flex;
+      gap: 0.32rem;
+    }
+
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.95rem 1.15rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .drawer-overview {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .ethics-inline-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.58rem 0.72rem;
+      border-radius: 8px;
+      background: #FFFBEB;
+      border: 1px solid #F59E0B;
+      color: #78350F;
+      font-size: 0.77rem;
+    }
+
+    /* Three Compact Distinct Cards */
+    .pillar-card {
+      border-radius: 10px;
+      padding: 0.75rem 0.88rem;
+      border: 1px solid var(--border);
+    }
+
+    .pillar-theory {
+      background: #F6F7FF;
+      border-left: 4px solid var(--indigo);
+    }
+
+    .pillar-practice {
+      background: #F3FBF8;
+      border-left: 4px solid var(--teal);
+    }
+
+    .pillar-law {
+      background: #FFFDF3;
+      border-left: 4px solid var(--theory-gold);
+    }
+
+    .pillar-kicker {
+      font-size: 0.66rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.055em;
+      margin-bottom: 0.18rem;
+    }
+
+    .pillar-theory .pillar-kicker { color: var(--indigo); }
+    .pillar-practice .pillar-kicker { color: var(--teal); }
+    .pillar-law .pillar-kicker { color: var(--gold-ink); }
+
+    .pillar-heading {
+      margin: 0 0 0.24rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--navy-deep);
+    }
+
+    .pillar-text {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .law-mini-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.44rem;
+      margin-top: 0.58rem;
+    }
+
+    .law-mini-box {
+      background: #FFFFFF;
+      border: 1px solid #EFE0AE;
+      border-radius: 7px;
+      padding: 0.5rem 0.65rem;
+      font-size: 0.77rem;
+      color: var(--text);
+    }
+
+    .law-mini-box strong {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.045em;
+      color: var(--gold-ink);
+      margin-bottom: 0.12rem;
+    }
+
+    /* Drawer Connections Section */
+    .section-heading {
+      margin: 0 0 0.45rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--navy);
+    }
+
+    .conn-group-label {
+      margin: 0.3rem 0 0.32rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
+    .conn-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .conn-btn {
+      width: 100%;
+      text-align: left;
+      padding: 0.52rem 0.68rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--canvas-bg);
+      display: flex;
+      flex-direction: column;
+      gap: 0.22rem;
+      transition: border-color var(--ease), background var(--ease), transform var(--ease);
+    }
+
+    .conn-btn:hover {
+      background: var(--navy-soft);
+      border-color: var(--navy);
+      transform: translateX(2px);
+    }
+
+    .conn-btn.type-handoff { border-left: 3.5px solid var(--teal); }
+    .conn-btn.type-theory  { border-left: 3.5px solid var(--theory-gold); }
+    .conn-btn.type-spiral  { border-left: 3.5px solid var(--indigo); }
+
+    .conn-btn-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+    }
+
+    .conn-btn-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--navy-deep);
+    }
+
+    .conn-btn-reason {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      line-height: 1.38;
+    }
+
+    /* Collapsible Objectives & TLO Accordion */
+    .syllabus-details {
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: var(--canvas-bg);
+      overflow: hidden;
+    }
+
+    .syllabus-details summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.62rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--navy);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .syllabus-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .syllabus-details summary::after {
+      content: "+";
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .syllabus-details[open] summary::after {
+      content: "−";
+    }
+
+    .details-body {
+      padding: 0.2rem 0.85rem 0.85rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .obj-list {
+      margin: 0.35rem 0 0;
+      padding-left: 1.15rem;
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.24rem;
+    }
+
+    .tlo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.32rem;
+    }
+
+    .tlo-card {
+      font-size: 0.75rem;
+      background: var(--canvas-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.38rem 0.56rem;
+    }
+
+    .tlo-card strong {
+      color: var(--navy);
+    }
+
+    /* =========================================================================
+       9. RESPONSIVE BREAKPOINTS (NARROW CANVAS LMS IFRAMES & MOBILE)
+       ========================================================================= */
+    @media (max-width: 1020px) {
+      .graph-canvas {
+        padding: 2.1rem 1.2rem 0.8rem;
+      }
+
+      .week-node {
+        width: clamp(144px, 27vw, 178px);
+      }
+
+      .lanes-stack {
+        gap: 2.5rem;
+      }
+    }
+
+    @media (max-width: 740px) {
+      .top-header {
+        padding: 0.52rem 0.8rem;
+      }
+
+      .header-subtitle {
+        display: none;
+      }
+
+      .lens-switcher {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .lens-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.28rem 0.35rem;
+        font-size: 0.72rem;
+      }
+
+      .layer-bar {
+        padding: 0.45rem 0.8rem;
+      }
+
+      .map-stage {
+        padding: 0.65rem 0.6rem 5.2rem;
+      }
+
+      .graph-canvas {
+        padding: 1.8rem 0.45rem 0.6rem;
+      }
+
+      .week-node {
+        width: calc(50% - 0.55rem);
+        min-width: 132px;
+      }
+
+      .bottom-nav {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+      }
+
+      .fs-label {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app-shell" class="app-shell">
+    <!-- 1. SLIM TOP NAVY HEADER -->
+    <header class="top-header">
+      <div class="brand-block">
+        <span class="topic-badge">COMP1103</span>
+        <div class="brand-titles">
+          <h1 class="header-title">COMP1103 UX Fundamentals</h1>
+          <p class="header-subtitle">Interactive Semester Concept Map · Theory, Practice &amp; Laws of UX</p>
+        </div>
+      </div>
+
+      <div class="lens-switcher" role="group" aria-label="Node display lens">
+        <button type="button" class="lens-btn is-active" data-lens="journey" aria-pressed="true">Journey</button>
+        <button type="button" class="lens-btn" data-lens="theory" aria-pressed="false">Theory</button>
+        <button type="button" class="lens-btn" data-lens="practice" aria-pressed="false">Practice</button>
+        <button type="button" class="lens-btn" data-lens="laws" aria-pressed="false">Laws of UX</button>
+      </div>
+
+      <div class="header-utilities">
+        <div class="progress-pill" title="Modules explored across the semester">
+          <span class="progress-dot" aria-hidden="true"></span>
+          <span id="progress-text">1 / 12 explored</span>
+        </div>
+        <button type="button" id="btn-fullscreen" class="fullscreen-btn" title="Toggle fullscreen view" aria-label="Toggle fullscreen">
+          <span aria-hidden="true">&#x26F6;</span>
+          <span class="fs-label">Fullscreen</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 2. TYPED LINK-LAYER TOGGLE BAR -->
+    <section class="layer-bar" aria-label="Toggle cross-module linkage layers">
+      <div class="layer-controls" role="group" aria-label="Linkage constellations">
+        <span class="layer-bar-label">Link Layers:</span>
+
+        <button type="button" class="layer-pill" data-layer="handoff" aria-pressed="false">
+          <svg class="line-swatch" viewBox="0 0 24 10" aria-hidden="true">
+            <line x1="1" y1="5" x2="18" y2="5" stroke="#0D7A5F" stroke-width="2.4" stroke-linecap="round"></line>
+            <polygon points="17,2 23,5 17,8" fill="#0D7A5F"></polygon>
+          </svg>
+          <span>Artefact Handoffs</span>
+        </button>
+
+        <button type="button" class="layer-pill" data-layer="theory" aria-pressed="false">
+          <svg class="line-swatch" viewBox="0 0 24 10" aria-hidden="true">
+            <line x1="1" y1="5" x2="18" y2="5" stroke="#CB9828" stroke-width="2.4" stroke-dasharray="5 3" stroke-linecap="round"></line>
+            <polygon points="17,2 23,5 17,8" fill="#CB9828"></polygon>
+          </svg>
+          <span>Theory &rarr; Practice</span>
+        </button>
+
+        <button type="button" class="layer-pill" data-layer="spiral" aria-pressed="false">
+          <svg class="line-swatch" viewBox="0 0 24 10" aria-hidden="true">
+            <line x1="1" y1="5" x2="18" y2="5" stroke="#4355B9" stroke-width="2.4" stroke-dasharray="2 3.5" stroke-linecap="round"></line>
+            <polygon points="17,2 23,5 17,8" fill="#4355B9"></polygon>
+          </svg>
+          <span>Research &amp; Eval Spiral</span>
+        </button>
+
+        <button type="button" class="layer-pill" data-layer="ethics" aria-pressed="false">
+          <svg class="line-swatch" viewBox="0 0 18 16" style="width:15px;height:14px;" aria-hidden="true">
+            <path d="M9 1L2.5 3.6v4.1c0 3.7 2.8 6.8 6.5 7.7 3.7-.9 6.5-4 6.5-7.7V3.6L9 1z" fill="#FEF3C7" stroke="#D97706" stroke-width="1.7"></path>
+          </svg>
+          <span>Ethics &amp; Security (TLO4)</span>
+        </button>
+      </div>
+
+      <div class="layer-actions">
+        <button type="button" id="btn-toggle-all" class="quick-action-btn">Show All Links</button>
+        <button type="button" id="btn-reset-layers" class="quick-action-btn">Reset</button>
+      </div>
+    </section>
+
+    <!-- 3. ETHICS & SECURITY (TLO4) DISMISSIBLE INLINE BANNER -->
+    <div id="ethics-banner" class="ethics-banner" role="region" aria-label="Ethics and Security thread note" hidden>
+      <div class="ethics-banner-content">
+        <span class="ethics-banner-icon" aria-hidden="true">
+          <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
+            <path d="M9 1.5L3 4v4.2c0 3.7 2.6 6.9 6 7.8 3.4-.9 6-4.1 6-7.8V4L9 1.5z" fill="#FFFFFF"></path>
+          </svg>
+        </span>
+        <span>
+          <strong>Ethics &amp; Security Thread (TLO4):</strong> Ethical, legal, and security responsibilities anchor
+          <strong>Weeks 1, 2, 3, and 12</strong> (user inclusion, research consent, unbiased user modelling, and responsible AI)
+          and intersect practically with <strong>Week 9</strong> PHP/MySQL database security and data protection.
+        </span>
+      </div>
+      <button type="button" id="btn-close-ethics-banner" class="ethics-banner-close" aria-label="Dismiss Ethics and Security note">&times;</button>
+    </div>
+
+    <!-- 4. VISUAL DOT-GRID CONCEPT MAP CANVAS -->
+    <main id="map-stage" class="map-stage" aria-label="COMP1103 interactive node-and-edge concept map">
+      <div class="stage-hint-row">
+        <div class="stage-caption">
+          <span>Hover any week to reveal its full ego-network</span>
+          <span aria-hidden="true">&middot;</span>
+          <span>Hover or click any coloured line to see why weeks connect</span>
+        </div>
+        <div id="intro-hint" class="hint-pill" role="status">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span>Click any week node or use Next &rarr; to step through</span>
+        </div>
+      </div>
+
+      <div id="graph-canvas" class="graph-canvas">
+        <svg id="edges-svg" class="edges-svg" aria-hidden="true"></svg>
+        <div id="lanes-stack" class="lanes-stack" data-lens="journey"></div>
+      </div>
+    </main>
+
+    <!-- 5. FLOATING BOTTOM-RIGHT SELF-PACED STEP CONTROLS -->
+    <nav class="bottom-nav" aria-label="Self-paced week navigation">
+      <button type="button" id="btn-prev" class="step-btn">&larr; Prev</button>
+      <button type="button" id="btn-week-status" class="week-indicator-btn" title="Open current week details">
+        Week 1 of 12
+      </button>
+      <button type="button" id="btn-next" class="step-btn is-primary">Next &rarr;</button>
+    </nav>
+
+    <!-- 6. FLOATING EDGE TOOLTIP (ON HOVER) & PINNED EDGE POPOVER (ON CLICK) -->
+    <div id="edge-tooltip" class="edge-tooltip" role="tooltip" aria-hidden="true"></div>
+    <div id="edge-popover" class="edge-popover" role="dialog" aria-label="Connection details" hidden></div>
+
+    <!-- 7. SLIDE-OVER MODULE DETAIL DRAWER -->
+    <div id="drawer-scrim" class="drawer-scrim" aria-hidden="true"></div>
+    <aside id="detail-drawer" class="detail-drawer" aria-label="Selected module details" aria-hidden="true"></aside>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      /* =======================================================================
+         1. CURRICULUM DATA — COMP1103 UX FUNDAMENTALS (ALL 12 MODULES)
+         ======================================================================= */
+      const PHASES = [
+        {
+          id: 1,
+          badge: "Phase 1 · Weeks 1–5",
+          title: "Discover, Define & Prototype",
+          assessment: "Assessment 1",
+          weeks: [1, 2, 3, 4, 5]
+        },
+        {
+          id: 2,
+          badge: "Phase 2 · Weeks 6–9",
+          title: "Build the Interactive Web Stack",
+          assessment: "Assessment 2",
+          weeks: [6, 7, 8, 9]
+        },
+        {
+          id: 3,
+          badge: "Phase 3 · Weeks 10–12",
+          title: "Evaluate & Look Ahead",
+          assessment: "Assessments 3 & 4",
+          weeks: [10, 11, 12]
+        }
+      ];
+
+      const TLO_MAP = {
+        TLO1: "Determine how human factor principles and system design affects usability",
+        TLO2: "Implement user focused software solutions through the effective inclusion of users in the design and development process",
+        TLO3: "Construct an evaluation procedure utilising the techniques of heuristic evaluations, usability testing and experimental evaluation",
+        TLO4: "Reflect on ethical, legal and security issues related to web applications",
+        TLO5: "Work independently and in a team on designing, creating and maintaining applications for the web",
+        TLO6: "Communicate effectively to a diverse audience following professional practice standards"
+      };
+
+      const LINK_TYPES = {
+        handoff: {
+          label: "Artefact Handoff",
+          color: "#0D7A5F",
+          badgeClass: "badge-handoff",
+          marker: "url(#arr-handoff)"
+        },
+        theory: {
+          label: "Theory → Practice",
+          color: "#CB9828",
+          badgeClass: "badge-theory",
+          marker: "url(#arr-theory)"
+        },
+        spiral: {
+          label: "Research & Eval Spiral",
+          color: "#4355B9",
+          badgeClass: "badge-spiral",
+          marker: "url(#arr-spiral)"
+        }
+      };
+
+      const ETHICS_WEEKS = new Set([1, 2, 3, 9, 12]);
+
+      const ETHICS_NOTES = {
+        1: "TLO4 Anchor: Establishes ethical user-centred responsibility and transparent professional documentation from day one.",
+        2: "TLO4 Anchor: Applies research ethics, informed consent, and respectful handling of human participant data.",
+        3: "TLO4 Anchor: Prevents stereotyping and exclusion by grounding Personas in authentic, ethically collected user evidence.",
+        9: "Practical Security Intersection: Protects user data via PHP input sanitisation and secure MySQL database connectivity.",
+        12: "TLO4 Anchor: Evaluates emerging legal, ethical, privacy, and accountability issues surrounding AI in UX practice."
+      };
+
+      const MODULES = [
+        {
+          id: 1,
+          phase: 1,
+          title: "What is UX?",
+          overview:
+            "You are introduced to the multidisciplinary field of User Experience (UX) and why real user input is integral to software design. You will explore how interactive systems work through the Execution/Evaluation Cycle, set up your development environment and Markdown workflow, and examine Jakob's Law.",
+          lens: {
+            journey: "Foundations · Jakob's Law",
+            theory: "Execution/Evaluation Cycle",
+            practice: "GitHub & Markdown setup",
+            laws: "Jakob's Law"
+          },
+          theory: {
+            heading: "Multidisciplinary UX & Execution/Evaluation Cycle",
+            detail:
+              "Examines how human factors, design, and software engineering intersect in UX. The Execution/Evaluation Cycle maps how users form goals, execute actions on an interface, and evaluate system feedback."
+          },
+          practice: {
+            heading: "Dev Environment Setup, GitHub Repositories & Markdown",
+            detail:
+              "Configure your local development workflow, initialise version-controlled GitHub repositories, and use clean Markdown for structured technical and UX documentation."
+          },
+          law: {
+            name: "Jakob's Law",
+            summary:
+              "Users spend most of their time on other sites, so they transfer existing mental models and expect your site to work in familiar ways.",
+            informsTheory:
+              "Explains how existing mental models shrink the Gulf of Execution in the Execution/Evaluation Cycle—users act confidently without relearning every control.",
+            informsPractice:
+              "Guides familiar layout conventions (predictable navigation, logo placement, icons) and standard GitHub repository/README structures teammates immediately understand."
+          },
+          objectives: [
+            "Appreciate the diversity of fields that work within a UX system",
+            "Identify the importance of user input into the design of our software systems",
+            "Apply the Execution/Evaluation Cycle to interaction",
+            "Review Jakob's Law and its application to existing systems",
+            "Set up your development environment, including GitHub repositories"
+          ],
+          tlos: ["TLO1", "TLO4", "TLO5", "TLO6"],
+          assessments: ["Assessment 1", "Assessment 2", "Assessment 4"]
+        },
+        {
+          id: 2,
+          phase: 1,
+          title: "User Research: Collecting Data",
+          overview:
+            "User research replaces designer guesswork with evidence. You will learn how to define user groups, run contextual observations, combine quantitative surveys with qualitative interviews, and synthesise raw notes into a PACT analysis.",
+          lens: {
+            journey: "Evidence · Miller's Law",
+            theory: "Surveys, Interviews & PACT",
+            practice: "Research plan & PACT analysis",
+            laws: "Miller's Law"
+          },
+          theory: {
+            heading: "Quantitative Surveys, Qualitative Interviews, Observations & PACT",
+            detail:
+              "Establishes iterative user research as the backbone of user-centred design, organising human insight across People, Activities, Contexts, and Technologies (PACT)."
+          },
+          practice: {
+            heading: "User Research Plan, Observation Notes & Compiled PACT Analysis",
+            detail:
+              "Plan an ethical data-collection process, capture structured user observations, and compile findings into a concise PACT analysis ready to guide design decisions."
+          },
+          law: {
+            name: "Miller's Law",
+            summary:
+              "The average person keeps roughly 7 (±2) items in working memory, making meaningful chunking essential for comprehension.",
+            informsTheory:
+              "Explains working-memory limits and why PACT deliberately chunks complex, unstructured human behaviour into four clear analytical domains.",
+            informsPractice:
+              "Shapes concise, sectioned surveys (preventing respondent fatigue) and guides grouped UI menus and clean information hierarchies later in your build."
+          },
+          objectives: [
+            "Design a user research process using a suite of tools and techniques",
+            "Discuss the implications of Miller's Law as it relates to the design of our software systems",
+            "Compile your user research notes into a PACT analysis"
+          ],
+          tlos: ["TLO1", "TLO2", "TLO4", "TLO5", "TLO6"],
+          assessments: ["Assessment 1", "Assessment 4"]
+        },
+        {
+          id: 3,
+          phase: 1,
+          title: "Who is the User?",
+          overview:
+            "Moves beyond the nebulous label of 'the user' to define the actual human beings interacting with your software. Drawing directly on your PACT analysis, you will capture target user needs in a consumable Persona poster.",
+          lens: {
+            journey: "Empathy · Hick's Law",
+            theory: "Evidence-based user modelling",
+            practice: "Target profile & Persona poster",
+            laws: "Hick's Law"
+          },
+          theory: {
+            heading: "Evidence-Based User Modelling Beyond the Generic 'User'",
+            detail:
+              "Translates PACT findings into rich, realistic user profiles capturing goals, contexts, and barriers so teams avoid designing solely for themselves."
+          },
+          practice: {
+            heading: "Target User Definition & Visual Persona Poster",
+            detail:
+              "Distil key research attributes, goals, and pain points into a clear, visually scannable Persona poster that informs every downstream screen."
+          },
+          law: {
+            name: "Hick's Law",
+            summary:
+              "The time it takes to make a decision increases with the number and complexity of choices presented.",
+            informsTheory:
+              "Explains why trying to design for 'everyone' creates bloated, slow interfaces; evidence-backed Personas justify disciplined feature prioritisation.",
+            informsPractice:
+              "Focuses your Persona poster on top decisive goals and guides future screens to spotlight core user tasks while trimming clutter and unnecessary options."
+          },
+          objectives: [
+            "Define the specific details of the target users",
+            "Apply Hick's Law to the design process",
+            "Create a Persona poster that captures these features into a consumable form"
+          ],
+          tlos: ["TLO1", "TLO2", "TLO4", "TLO5", "TLO6"],
+          assessments: ["Assessment 1", "Assessment 4"]
+        },
+        {
+          id: 4,
+          phase: 1,
+          title: "Paper Prototyping",
+          overview:
+            "Takes your first tangible step toward a user-centred solution via rapid, cost-effective paper sketching and UX mapping. You will organise site hierarchy, draft annotated wireframes, and map end-to-end interactive flows before coding.",
+          lens: {
+            journey: "Ideation · Postel's Law",
+            theory: "Wireframes, Flows & Maps",
+            practice: "Paper prototype & sitemap",
+            laws: "Postel's Law"
+          },
+          theory: {
+            heading: "Low-Fidelity Ideation, Annotations, Sitemaps, User Flows & Journey Maps",
+            detail:
+              "Validates hypotheses cheaply early in the cycle. Sitemaps establish page hierarchy, Process Maps (User Flows) detail step paths, and Journey Maps capture user actions and emotions over time."
+          },
+          practice: {
+            heading: "Annotated Paper Wireframes, Storyboards, Sitemap & User Flow",
+            detail:
+              "Draft multi-page paper wireframes with developer annotations, interactive storyboards showing screen transitions, a complete sitemap, and a typical operational user flow."
+          },
+          law: {
+            name: "Postel's Law",
+            summary:
+              "Be liberal in what you accept from users, and conservative and clear in what you send back.",
+            informsTheory:
+              "Frames forgiving human-computer dialogue—recognising that real users bring typos, varied formats, and alternative mental paths.",
+            informsPractice:
+              "Informs wireframe annotations and flows: accommodating flexible form inputs, supporting alternative entry paths, and sketching clear, non-jargon feedback states."
+          },
+          objectives: [
+            "Understand the influence of Postel's Law on UX design",
+            "Draft a number of wireframes that represent separate pages of our site",
+            "Draft prototype storyboards that show interactivity",
+            "Compile a sitemap",
+            "Define the user flow of a typical operation"
+          ],
+          tlos: ["TLO1", "TLO2", "TLO5", "TLO6"],
+          assessments: ["Assessment 1", "Assessment 4"]
+        },
+        {
+          id: 5,
+          phase: 1,
+          title: "Evaluating the Design",
+          overview:
+            "Validates your paper design before writing production code using both predictive modelling (GOMS/KLM) and early user-validation methods including card sorting, preference testing, and heuristic evaluation.",
+          lens: {
+            journey: "Validation · Peak-End Rule",
+            theory: "GOMS/KLM & Heuristics",
+            practice: "KLM timing & heuristic audit",
+            laws: "Peak-End Rule"
+          },
+          theory: {
+            heading: "Predictive Analytics (GOMS/KLM), Card Sorting, Preference Testing & Heuristics",
+            detail:
+              "Combines analytical task-time prediction (GOMS/KLM) with early structural and usability checks (card sorting, preference tests, and heuristic inspection) to catch flaws cheaply."
+          },
+          practice: {
+            heading: "KLM Task Timing, Card Sort/Preference Tests & Heuristic Audit",
+            detail:
+              "Run a GOMS/KLM predictive timing pass on a core operation, test navigation groupings with users, and conduct a structured heuristic audit on your paper prototype."
+          },
+          law: {
+            name: "Peak-End Rule",
+            summary:
+              "People judge an experience largely by how they felt at its emotional peak and at its end, rather than the average of every moment.",
+            informsTheory:
+              "Balances raw KLM speed calculations with human memory psychology—a fast workflow still fails emotionally if its critical step or ending feels stressful or vague.",
+            informsPractice:
+              "Directs heuristic audits toward high-stakes peaks (such as submitting key forms) and ensures flows conclude with reassuring, unambiguous confirmation states."
+          },
+          objectives: [
+            "Consider the psychological influence of the Peak-End Rule",
+            "Use the GOMS/KLM process to conduct a predictive analysis of the design",
+            "Test user features through card sorting and preference testing",
+            "Apply heuristic evaluation techniques on a paper prototype"
+          ],
+          tlos: ["TLO1", "TLO2", "TLO3", "TLO5", "TLO6"],
+          assessments: ["Assessment 1", "Assessment 4"]
+        },
+        {
+          id: 6,
+          phase: 2,
+          title: "Conceptualising Interaction & Web Dev: HTML",
+          overview:
+            "Crosses the bridge from validated design to web implementation. You will study Shneiderman's Principles and Eight Golden Rules of interaction design and construct the semantic, interconnected HTML5 structure of your website.",
+          lens: {
+            journey: "Structure · Aesthetic-Usability",
+            theory: "Shneiderman's 8 Golden Rules",
+            practice: "Static semantic HTML5 pages",
+            laws: "Aesthetic-Usability Effect"
+          },
+          theory: {
+            heading: "Shneiderman's Principles, Eight Golden Rules & Web Structure",
+            detail:
+              "Explores enduring interaction guidelines—consistency, feedback, closure, error prevention, reversal, and reduced memory load—and how they evolved alongside web architecture."
+          },
+          practice: {
+            heading: "Static, Interconnected Semantic HTML5 Pages",
+            detail:
+              "Translate your sitemap and wireframes into clean, accessible, interconnected HTML5 pages using meaningful landmarks, headings, forms, and navigation inside GitHub."
+          },
+          law: {
+            name: "Aesthetic-Usability Effect",
+            summary:
+              "Users often perceive visually attractive designs as more usable—sometimes overlooking genuine functional defects during testing.",
+            informsTheory:
+              "Highlights a key evaluation blind spot: visual polish can mask breaches of Shneiderman's Golden Rules until real user tasks fail.",
+            informsPractice:
+              "Explains why building and checking bare semantic HTML first matters—verifying logical reading order, clear labels, and working links before CSS polish hides structural flaws."
+          },
+          objectives: [
+            "Identify Shneiderman's Principles",
+            "Apply the Golden Rules to our implementation of an interactive system",
+            "Appreciate the iteration and evolution of the Principles",
+            "Consider how the Aesthetic-Usability Effect may cause faults to be missed during testing",
+            "Implement a basic web site with static, interconnected pages"
+          ],
+          tlos: ["TLO2", "TLO5"],
+          assessments: ["Assessment 2", "Assessment 4"]
+        },
+        {
+          id: 7,
+          phase: 2,
+          title: "Web Development: CSS",
+          overview:
+            "Enhances the presentation, hierarchy, and spatial ergonomics of your HTML pages with Cascading Style Sheets (CSS). You will explore inline, internal, and external styling hierarchies, selectors, pseudo-classes, and Fitts' Law.",
+          lens: {
+            journey: "Styling · Fitts' Law",
+            theory: "CSS Cascade & Selectors",
+            practice: "External stylesheets & layout",
+            laws: "Fitts' Law"
+          },
+          theory: {
+            heading: "Inline, Internal & External CSS Hierarchy, Selectors & Pseudo-Classes",
+            detail:
+              "Covers how the CSS cascade, specificity, and modular external stylesheets separate presentation from markup while shaping visual grouping and motor ergonomics."
+          },
+          practice: {
+            heading: "External Stylesheets, Targeted Styling & Layout Refinement",
+            detail:
+              "Style your existing HTML site with maintainable external CSS, target specific page elements via selectors and :hover/:focus pseudo-classes, and refine layout proportions."
+          },
+          law: {
+            name: "Fitts' Law",
+            summary:
+              "The time required to acquire a target depends on the distance to the target and its physical size.",
+            informsTheory:
+              "Links human motor-control science directly to interface geometry and KLM pointing costs—cramped or distant controls slow every interaction.",
+            informsPractice:
+              "Directly shapes CSS rules: generous button padding, comfortable click/tap target ergonomics, proximity of related form actions, and unmistakable :hover/:focus hit-area cues."
+          },
+          objectives: [
+            "Articulate the differences between inline, internal, and external styling",
+            "Appreciate the benefit and hierarchy of different styling approaches",
+            "Implement solutions that allow for direct targeting of page content with specific styling",
+            "Observe how Fitts' Law dictates the layout and structure of our interfaces",
+            "Modify the existing HTML structure with style"
+          ],
+          tlos: ["TLO2", "TLO5"],
+          assessments: ["Assessment 2", "Assessment 4"]
+        },
+        {
+          id: 8,
+          phase: 2,
+          title: "Web Development: JavaScript",
+          overview:
+            "Brings live client-side interactivity to your HTML structure and CSS styling. You will learn JavaScript data types, scope, functions, selection, and loops while manipulating page elements dynamically through the DOM API.",
+          lens: {
+            journey: "Interactivity · Von Restorff",
+            theory: "JS Scope, Logic & DOM API",
+            practice: "Client-side DOM interactivity",
+            laws: "Von Restorff Effect"
+          },
+          theory: {
+            heading: "Data Types, Scope, Functions, Selection, Loops & the DOM API",
+            detail:
+              "Introduces core programming constructs alongside the Document Object Model (DOM)—a consistent, independent tree API for inspecting and updating live page state."
+          },
+          practice: {
+            heading: "Targeted Client-Side Interactivity & Live DOM Manipulation",
+            detail:
+              "Add responsive, event-driven interactivity to your website—such as live form checks, interactive filters, state toggles, and instant DOM feedback."
+          },
+          law: {
+            name: "Von Restorff Effect",
+            summary:
+              "The Isolation Effect: when multiple similar objects are present, the one that differs visually from the rest is most likely to be noticed and remembered.",
+            informsTheory:
+              "Grounds visual attention and perceptual salience in psychology—explaining how contrast guides rapid scanning across interactive screens.",
+            informsPractice:
+              "Guides JavaScript DOM class toggles that isolate active filters, spotlight a primary call-to-action, or distinctly flag a single validation error."
+          },
+          objectives: [
+            "Distinguish between the various data types and their scope",
+            "Implement functions, selection, and looping structures",
+            "Implement key client-side interactivity with JavaScript",
+            "Appreciate the benefit of the DOM as an independent, consistent API for accessing the structure of the page",
+            "Explore the psychological concepts associated with the Von Restorff Effect",
+            "Add targeted interactivity to the existing website"
+          ],
+          tlos: ["TLO2", "TLO5"],
+          assessments: ["Assessment 2", "Assessment 4"]
+        },
+        {
+          id: 9,
+          phase: 2,
+          title: "Web Development: PHP",
+          overview:
+            "Completes your full-stack web build with server-side logic and persistent data storage using PHP and MySQL. You will integrate HTML5, CSS, JavaScript, PHP, and MySQL securely to deliver dynamic, data-driven web pages.",
+          lens: {
+            journey: "Full Stack · Tesler's Law",
+            theory: "PHP, MySQL & DB Security",
+            practice: "Dynamic PHP/MySQL website",
+            laws: "Tesler's Law"
+          },
+          theory: {
+            heading: "Server-Side PHP, MySQL Connectivity, Arrays, Functions & DB Security",
+            detail:
+              "Explores server-side rendering, PHP data types, control flow, arrays, functions, relational database connections, and defensive techniques to safeguard stored data."
+          },
+          practice: {
+            heading: "Full-Stack Dynamic Website with Secure PHP/MySQL Persistence",
+            detail:
+              "Connect your front-end pages to a MySQL database via PHP to store, retrieve, and dynamically render content securely, completing Assessment 2."
+          },
+          law: {
+            name: "Tesler's Law",
+            summary:
+              "The Law of Conservation of Complexity: every system contains irreducible complexity that can only be shifted between the user and the software.",
+            informsTheory:
+              "Establishes the core engineering principle of UX—effortless user journeys depend on robust software architecture absorbing operational complexity.",
+            informsPractice:
+              "Justifies handling validation, relational queries, smart defaults, and database security protections cleanly inside PHP/MySQL so the user's interface stays simple."
+          },
+          objectives: [
+            "Identify the various data types, selection and repetition structures, arrays, and functions of the PHP language",
+            "Setup database connectivity from PHP",
+            "Appreciate the need for security and protection of database content and how PHP functions support this",
+            "Explore the relationship between Tesler's Law and effective UX design",
+            "Finalise the existing website with dynamic, back-end, data-supported functionality"
+          ],
+          tlos: ["TLO2", "TLO5"],
+          assessments: ["Assessment 2", "Assessment 4"]
+        },
+        {
+          id: 10,
+          phase: 3,
+          title: "Usefulness and Usability",
+          overview:
+            "With your working full-stack site complete, step back to critique interactive quality rigorously. You will separate usefulness (effectiveness) from usability (efficiency), analyse affordances and metaphors, and inspect system responsiveness.",
+          lens: {
+            journey: "Critique · Doherty Threshold",
+            theory: "Usefulness, Affordances & Flow",
+            practice: "Usability & responsiveness audit",
+            laws: "Doherty Threshold"
+          },
+          theory: {
+            heading: "Usefulness (Effectiveness) vs Usability (Efficiency), Affordances & Metaphors",
+            detail:
+              "Separates whether a system lets users achieve the right objective (usefulness) from how effortlessly they achieve it (usability), reinforced by intuitive affordances and metaphors."
+          },
+          practice: {
+            heading: "System Critique, Affordance Audit & Responsiveness Check",
+            detail:
+              "Critique an existing interactive system and your web build to separate utility gaps from workflow friction, evaluate visual signifiers, and diagnose latency bottlenecks."
+          },
+          law: {
+            name: "Doherty Threshold",
+            summary:
+              "Productivity soars when a computer and its users interact at a pace (< 400ms) that ensures neither has to wait on the other.",
+            informsTheory:
+              "Ties processing latency directly to Norman's Execution/Evaluation Cycle—delays past 400ms break cognitive flow and make systems feel unresponsive.",
+            informsPractice:
+              "Guides practical optimisations before live testing: instant UI feedback, clear loading states for slower PHP/MySQL queries, and streamlined interactions."
+          },
+          objectives: [
+            "Understand the importance of usefulness and usability in the design of interactive systems",
+            "Critique the separate components of usefulness and usability within an existing interactive system",
+            "Analyse how affordance and metaphors support and reinforce usability of systems",
+            "Discuss the value of the Doherty Threshold and how delay in processing can be a detriment to the user experience"
+          ],
+          tlos: ["TLO1", "TLO3", "TLO5", "TLO6"],
+          assessments: ["Assessment 3", "Assessment 4"]
+        },
+        {
+          id: 11,
+          phase: 3,
+          title: "Usability Evaluation",
+          overview:
+            "Puts your built website in front of real participants through a formal usability evaluation regime. You will design an experiment protocol, configure data-capture apparatus, execute live sessions, and draft a recommendation report.",
+          lens: {
+            journey: "Testing · All 10 Laws",
+            theory: "Empirical UCD Experimentation",
+            practice: "Live test & recommendation report",
+            laws: "Synthesis: All 10 Laws"
+          },
+          theory: {
+            heading: "Empirical Usability Evaluation Regime Within User-Centred Design",
+            detail:
+              "Completes the scientific UCD loop—turning usability hypotheses into structured participant tasks, ethical protocols, reliable apparatus, and evidence-backed findings."
+          },
+          practice: {
+            heading: "Experiment Design, Capture Apparatus, Live Testing & Report",
+            detail:
+              "Design a usability experiment for your website, recruit participants, capture empirical session data, and author a professional recommendation report (Assessment 3)."
+          },
+          law: {
+            name: "Synthesis: All 10 Laws in Action",
+            summary:
+              "Real participants empirically test every design and engineering principle you built across Weeks 1–10.",
+            informsTheory:
+              "Contrasts analytical predictions and design laws against actual human behaviour, revealing subtle breakdowns that only live observation uncovers.",
+            informsPractice:
+              "Elevates your recommendation report by diagnosing *why* users struggled—linking observed friction directly to Fitts', Hick's, Postel's, or Doherty Threshold violations."
+          },
+          objectives: [
+            "Design an experiment process to test the usability of the existing website",
+            "Recruit participants and execute a usability evaluation",
+            "Consider the results collected and draft a recommendation report"
+          ],
+          tlos: ["TLO1", "TLO3", "TLO5", "TLO6"],
+          assessments: ["Assessment 3", "Assessment 4"]
+        },
+        {
+          id: 12,
+          phase: 3,
+          title: "Future of UX",
+          overview:
+            "Explores UX's evolving role in software engineering and the wider computing industry. You will survey specialist UX career paths, observe emerging UX tools, and examine how Artificial Intelligence (AI) is reshaping UX practice.",
+          lens: {
+            journey: "Horizon · Human Factors",
+            theory: "UX Careers, Tools & AI Impact",
+            practice: "AI-in-UX demo & reflection",
+            laws: "Timeless Human Factors"
+          },
+          theory: {
+            heading: "UX Roles in Software & Computing, Emerging Tools & AI's Impact",
+            detail:
+              "Maps specialist UX careers across modern computing teams and critically examines emerging AI-assisted workflows alongside ethical, legal, and security responsibilities."
+          },
+          practice: {
+            heading: "Industry Role Mapping, AI-Assisted UX Demo & Portfolio Reflection",
+            detail:
+              "Demonstrate purposeful, critical use of AI tools within UX workflows and reflect on how your full-semester research-to-code-to-testing toolkit translates to industry."
+          },
+          law: {
+            name: "Synthesis: Timeless Human Factors",
+            summary:
+              "Tools, stacks, and AI evolve rapidly, while human perception, memory, attention, and decision-making remain grounded in the Laws of UX.",
+            informsTheory:
+              "Reinforces ethical judgment and human agency (TLO4)—even when AI generates interfaces rapidly, UX professionals remain accountable for accessibility, trust, and cognition.",
+            informsPractice:
+              "Equips you to critically audit AI-generated designs using Weeks 1–11 principles—spotting glossy Aesthetic-Usability traps and hidden usability flaws before shipping."
+          },
+          objectives: [
+            "Identify the various industry positions that exist for a UX professional",
+            "Demonstrate how AI can be utilised within the discipline",
+            "Observe the new and emerging tools that enhance the capabilities of UX professionals"
+          ],
+          tlos: ["TLO1", "TLO4"],
+          assessments: ["Assessment 4"]
+        }
+      ];
+
+      /* Weekly sequential backbone (always visible in resting state) */
+      const BACKBONE = [
+        [1, 2], [2, 3], [3, 4], [4, 5],
+        [5, 6], [6, 7], [7, 8], [8, 9],
+        [9, 10], [10, 11], [11, 12]
+      ];
+
+      /* All 23 Typed Cross-Module & Handoff Linkages */
+      const TYPED_LINKS = [
+        // 1) Artefact Handoffs (Solid Teal)
+        { id: "h-1-6",   from: 1,  to: 6,  type: "handoff", reason: "The GitHub repository and dev environment set up in Week 1 hosts your HTML, CSS, JS, and PHP website build." },
+        { id: "h-2-3",   from: 2,  to: 3,  type: "handoff", reason: "PACT analysis findings from user research are distilled directly into concrete target Personas." },
+        { id: "h-3-4",   from: 3,  to: 4,  type: "handoff", reason: "Persona goals and pain points drive every wireframe, storyboard, sitemap, and user flow." },
+        { id: "h-4-6",   from: 4,  to: 6,  type: "handoff", reason: "Your validated sitemap and annotated paper wireframes translate directly into interconnected HTML pages." },
+        { id: "h-6-7",   from: 6,  to: 7,  type: "handoff", reason: "Semantic HTML5 structure provides the clean markup and DOM hooks styled by external CSS." },
+        { id: "h-7-8",   from: 7,  to: 8,  type: "handoff", reason: "Styled UI components gain live client-side interactivity and visual state changes via JavaScript and the DOM." },
+        { id: "h-8-9",   from: 8,  to: 9,  type: "handoff", reason: "Front-end interactivity connects with PHP and MySQL to render secure, data-driven web pages." },
+        { id: "h-9-10",  from: 9,  to: 10, type: "handoff", reason: "Your completed full-stack website is critically audited for usefulness, usability, affordances, and latency." },
+        { id: "h-10-11", from: 10, to: 11, type: "handoff", reason: "Usefulness, usability, and responsiveness criteria shape the empirical usability test protocol." },
+
+        // 2) Theory -> Practice Bridges (Dashed Deep Gold)
+        { id: "t-2-5",   from: 2,  to: 5,  type: "theory",  reason: "Miller's Law chunking and research data (W2) are validated via card sorting and preference testing (W5)." },
+        { id: "t-2-6",   from: 2,  to: 6,  type: "theory",  reason: "PACT analysis and Miller's Law grouping (W2) directly inform how content is structured into navigable HTML pages (W6)." },
+        { id: "t-5-6",   from: 5,  to: 6,  type: "theory",  reason: "Paper-prototype heuristic evaluation (W5) connects to Shneiderman's Golden Rules and the Aesthetic-Usability Effect (W6)—catching flaws before visual polish hides them." },
+        { id: "t-5-7",   from: 5,  to: 7,  type: "theory",  reason: "Predictive GOMS/KLM task-time modelling (W5) links directly to Fitts' Law, where CSS target sizing and spacing physically cut pointing time (W7)." },
+        { id: "t-3-7",   from: 3,  to: 7,  type: "theory",  reason: "Hick's Law and Persona priorities (W3) govern visual hierarchy and reduced clutter in CSS layouts (W7)." },
+        { id: "t-3-8",   from: 3,  to: 8,  type: "theory",  reason: "Persona goals and Hick's Law (W3) pair with the Von Restorff Effect (W8) so JavaScript isolates high-priority actions and feedback." },
+        { id: "t-4-9",   from: 4,  to: 9,  type: "theory",  reason: "Postel's Law (accepting messy user input gracefully, W4) connects to Tesler's Law and PHP/MySQL security (W9), absorbing complexity on the server." },
+
+        // 3) Research & Evaluation Spiral (Dotted Indigo)
+        { id: "s-1-6",   from: 1,  to: 6,  type: "spiral",  reason: "Norman's Execution/Evaluation Cycle (W1) expands into Shneiderman's Eight Golden Rules of interaction design (W6)." },
+        { id: "s-6-10",  from: 6,  to: 10, type: "spiral",  reason: "Shneiderman's interaction rules (W6) culminate in critiquing affordances, metaphors, and the Doherty Threshold (W10)." },
+        { id: "s-1-10",  from: 1,  to: 10, type: "spiral",  reason: "The Execution/Evaluation Cycle (W1) directly underpins usefulness, usability, and <400ms feedback evaluation (W10)." },
+        { id: "s-2-5",   from: 2,  to: 5,  type: "spiral",  reason: "Exploratory user observations and surveys (W2) spiral into structured pre-code user validation via card sorting and preference testing (W5)." },
+        { id: "s-5-11",  from: 5,  to: 11, type: "spiral",  reason: "Pre-code heuristic and predictive evaluations (W5) expand into live empirical usability experiments with real participants (W11)." },
+        { id: "s-2-11",  from: 2,  to: 11, type: "spiral",  reason: "Foundational observation, participant ethics, and data-capture skills (W2) return at full scale in Week 11's usability experiment." },
+        { id: "s-11-12", from: 11, to: 12, type: "spiral",  reason: "Completing the empirical research → build → test lifecycle frames industry UX careers and responsible AI workflows (W12)." }
+      ];
+
+      /* =======================================================================
+         2. APPLICATION STATE & LMS-SAFE STORAGE
+         ======================================================================= */
+      const STORAGE_KEY = "comp1103_concept_map_explored_v3";
+
+      function loadExplored() {
+        try {
+          const raw = window.localStorage.getItem(STORAGE_KEY);
+          if (!raw) return new Set([1]);
+          const parsed = JSON.parse(raw);
+          return new Set(Array.isArray(parsed) && parsed.length ? parsed : [1]);
+        } catch {
+          return new Set([1]);
+        }
+      }
+
+      function saveExplored() {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.explored]));
+        } catch {
+          // Gracefully ignore when Canvas LMS iframe blocks storage
+        }
+      }
+
+      const state = {
+        lens: "journey",          // "journey" | "theory" | "practice" | "laws"
+        activeLayers: {
+          handoff: false,
+          theory: false,
+          spiral: false,
+          ethics: false
+        },
+        ethicsBannerDismissed: false,
+        selectedId: null,         // Active week in slide-over drawer
+        drawerOpen: false,
+        hoveredNodeId: null,      // Temporary node ego-network focus
+        hoveredEdgeId: null,      // Currently hovered typed edge
+        pinnedEdgeId: null,       // Clicked edge showing popover
+        explored: loadExplored()
+      };
+
+      /* =======================================================================
+         3. DOM REFERENCES & LOOKUPS
+         ======================================================================= */
+      const dom = {
+        shell: document.getElementById("app-shell"),
+        lensBtns: document.querySelectorAll(".lens-btn"),
+        layerPills: document.querySelectorAll(".layer-pill"),
+        btnToggleAll: document.getElementById("btn-toggle-all"),
+        btnResetLayers: document.getElementById("btn-reset-layers"),
+        ethicsBanner: document.getElementById("ethics-banner"),
+        btnCloseEthicsBanner: document.getElementById("btn-close-ethics-banner"),
+        progressText: document.getElementById("progress-text"),
+        btnFullscreen: document.getElementById("btn-fullscreen"),
+        mapStage: document.getElementById("map-stage"),
+        introHint: document.getElementById("intro-hint"),
+        graphCanvas: document.getElementById("graph-canvas"),
+        edgesSvg: document.getElementById("edges-svg"),
+        lanesStack: document.getElementById("lanes-stack"),
+        btnPrev: document.getElementById("btn-prev"),
+        btnNext: document.getElementById("btn-next"),
+        btnWeekStatus: document.getElementById("btn-week-status"),
+        edgeTooltip: document.getElementById("edge-tooltip"),
+        edgePopover: document.getElementById("edge-popover"),
+        drawerScrim: document.getElementById("drawer-scrim"),
+        drawer: document.getElementById("detail-drawer")
+      };
+
+      const getModule = (id) => MODULES.find((m) => m.id === id);
+      const getPhase = (id) => PHASES.find((p) => p.id === id);
+      const getLink = (id) => TYPED_LINKS.find((l) => l.id === id);
+
+      function escapeHtml(val) {
+        return String(val)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      /* =======================================================================
+         4. RENDER PHASE LANES & COMPACT MODULE NODES
+         ======================================================================= */
+      function renderGraphNodes() {
+        dom.lanesStack.dataset.lens = state.lens;
+
+        dom.lanesStack.innerHTML = PHASES.map((phase) => {
+          const nodesHtml = phase.weeks
+            .map((weekId) => {
+              const mod = getModule(weekId);
+              const isExplored = state.explored.has(mod.id);
+              const subText = mod.lens[state.lens];
+              const assessHtml = mod.assessments
+                .map((a) => `<span class="mini-assess">${escapeHtml(a.replace("Assessment ", "A"))}</span>`)
+                .join("");
+
+              return `
+                <button
+                  type="button"
+                  class="week-node ${isExplored ? "is-explored" : ""}"
+                  data-node-id="${mod.id}"
+                  aria-label="Week ${mod.id}: ${escapeHtml(mod.title)}"
+                >
+                  <div class="node-head">
+                    <span class="node-head-left">
+                      <span class="week-pill">W${mod.id}</span>
+                    </span>
+                    <span class="node-head-right">
+                      <span class="ethics-shield-badge" title="Ethics & Security (TLO4) Thread" aria-hidden="true">
+                        <svg width="11" height="11" viewBox="0 0 18 18" fill="none">
+                          <path d="M9 1.5L3 4v4.2c0 3.7 2.6 6.9 6 7.8 3.4-.9 6-4.1 6-7.8V4L9 1.5z" fill="#FFFFFF"></path>
+                        </svg>
+                      </span>
+                      <span class="explored-dot" title="${isExplored ? "Explored" : "Not yet explored"}" aria-hidden="true"></span>
+                    </span>
+                  </div>
+                  <h2 class="node-title">${escapeHtml(mod.title)}</h2>
+                  <div class="node-lens-sub lens-${state.lens}" title="${escapeHtml(subText)}">
+                    ${escapeHtml(subText)}
+                  </div>
+                  <div class="node-assess-row">${assessHtml}</div>
+                </button>
+              `;
+            })
+            .join("");
+
+          return `
+            <section class="phase-lane" data-phase="${phase.id}" aria-label="${escapeHtml(phase.title)}">
+              <div class="lane-header">
+                <div class="lane-title-group">
+                  <span class="lane-pill">${escapeHtml(phase.badge)}</span>
+                  <span>${escapeHtml(phase.title)}</span>
+                </div>
+                <span class="lane-pill">${escapeHtml(phase.assessment)}</span>
+              </div>
+              <div class="lane-nodes">${nodesHtml}</div>
+            </section>
+          `;
+        }).join("");
+
+        // Bind hover (ego-network) and click (open drawer) listeners
+        dom.lanesStack.querySelectorAll(".week-node").forEach((node) => {
+          const id = Number(node.dataset.nodeId);
+
+          node.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeEdgePopover();
+            openModule(id);
+          });
+
+          node.addEventListener("mouseenter", () => {
+            state.hoveredNodeId = id;
+            updateVisualStates();
+          });
+
+          node.addEventListener("mouseleave", () => {
+            state.hoveredNodeId = null;
+            updateVisualStates();
+          });
+        });
+
+        requestAnimationFrame(() => {
+          drawAllSvgEdges();
+          updateVisualStates();
+        });
+      }
+
+      /* =======================================================================
+         5. SMART SVG PATH ROUTING (BACKBONE + 23 TYPED EDGES + HIT TARGETS)
+         ======================================================================= */
+      function drawAllSvgEdges() {
+        const canvasRect = dom.graphCanvas.getBoundingClientRect();
+        if (!canvasRect.width || !canvasRect.height) return;
+
+        // Gather exact node coordinates relative to graphCanvas
+        const boxes = new Map();
+        dom.lanesStack.querySelectorAll(".week-node").forEach((el) => {
+          const id = Number(el.dataset.nodeId);
+          const r = el.getBoundingClientRect();
+          boxes.set(id, {
+            left: r.left - canvasRect.left,
+            right: r.right - canvasRect.left,
+            top: r.top - canvasRect.top,
+            bottom: r.bottom - canvasRect.top,
+            cx: r.left - canvasRect.left + r.width / 2,
+            cy: r.top - canvasRect.top + r.height / 2,
+            w: r.width,
+            h: r.height
+          });
+        });
+
+        // Compute outer safe corridors for multi-row arcs
+        let minLeft = Infinity;
+        let maxRight = 0;
+        boxes.forEach((b) => {
+          if (b.left < minLeft) minLeft = b.left;
+          if (b.right > maxRight) maxRight = b.right;
+        });
+        const outerLeftX = Math.max(10, minLeft - 28);
+        const outerRightX = Math.min(canvasRect.width - 10, maxRight + 28);
+
+        // Pre-group sibling pairs (e.g., 1->6 and 2->5 appear in two layers)
+        const pairCounts = new Map();
+        const pairIndices = new Map();
+        TYPED_LINKS.forEach((l) => {
+          const key = `${l.from}-${l.to}`;
+          pairCounts.set(key, (pairCounts.get(key) || 0) + 1);
+        });
+
+        const defs = `
+          <defs>
+            <marker id="arr-backbone" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+              <path d="M 0 1.2 L 9.2 5 L 0 8.8 z" fill="#B6C0D6"></path>
+            </marker>
+            <marker id="arr-handoff" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto">
+              <path d="M 0 1 L 9.5 5 L 0 9 z" fill="#0D7A5F"></path>
+            </marker>
+            <marker id="arr-theory" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto">
+              <path d="M 0 1 L 9.5 5 L 0 9 z" fill="#CB9828"></path>
+            </marker>
+            <marker id="arr-spiral" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto">
+              <path d="M 0 1 L 9.5 5 L 0 9 z" fill="#4355B9"></path>
+            </marker>
+          </defs>
+        `;
+
+        // 1) Draw weekly sequential backbone paths
+        const backboneHtml = BACKBONE.map(([fromId, toId]) => {
+          const a = boxes.get(fromId);
+          const b = boxes.get(toId);
+          if (!a || !b) return "";
+          const d = computeBackbonePath(a, b);
+          return `<path class="backbone-path" data-b-from="${fromId}" data-b-to="${toId}" d="${d}" marker-end="url(#arr-backbone)" />`;
+        }).join("");
+
+        // 2) Draw typed links + transparent 14px hit targets
+        const typedVisibleParts = [];
+        const typedHitParts = [];
+
+        TYPED_LINKS.forEach((link) => {
+          const a = boxes.get(link.from);
+          const b = boxes.get(link.to);
+          if (!a || !b) return;
+
+          const key = `${link.from}-${link.to}`;
+          const count = pairCounts.get(key) || 1;
+          const idx = pairIndices.get(key) || 0;
+          pairIndices.set(key, idx + 1);
+          const siblingOffset = count > 1 ? (idx === 0 ? -1 : 1) : 0;
+
+          const d = computeTypedEdgePath(link, a, b, outerLeftX, outerRightX, siblingOffset);
+          const meta = LINK_TYPES[link.type];
+
+          typedVisibleParts.push(
+            `<path class="typed-edge type-${link.type}" data-edge-id="${link.id}" data-from="${link.from}" data-to="${link.to}" data-type="${link.type}" d="${d}" marker-end="${meta.marker}" />`
+          );
+
+          typedHitParts.push(
+            `<path class="edge-hit-target" data-hit-id="${link.id}" d="${d}" />`
+          );
+        });
+
+        dom.edgesSvg.setAttribute("viewBox", `0 0 ${canvasRect.width} ${canvasRect.height}`);
+        dom.edgesSvg.innerHTML = `${defs}<g class="layer-backbone">${backboneHtml}</g><g class="layer-typed">${typedVisibleParts.join("")}</g><g class="layer-hits">${typedHitParts.join("")}</g>`;
+
+        // Bind hover & click handlers to wide SVG edge hit targets
+        dom.edgesSvg.querySelectorAll(".edge-hit-target").forEach((hit) => {
+          const edgeId = hit.dataset.hitId;
+
+          hit.addEventListener("mouseenter", (e) => {
+            state.hoveredEdgeId = edgeId;
+            updateVisualStates();
+            showEdgeTooltip(edgeId, e.clientX, e.clientY);
+          });
+
+          hit.addEventListener("mousemove", (e) => {
+            if (state.hoveredEdgeId === edgeId) {
+              positionEdgeTooltip(e.clientX, e.clientY);
+            }
+          });
+
+          hit.addEventListener("mouseleave", () => {
+            state.hoveredEdgeId = null;
+            hideEdgeTooltip();
+            updateVisualStates();
+          });
+
+          hit.addEventListener("click", (e) => {
+            e.stopPropagation();
+            hideEdgeTooltip();
+            openEdgePopover(edgeId, e.clientX, e.clientY);
+          });
+        });
+
+        updateVisualStates();
+      }
+
+      /**
+       * Weekly backbone connector: clean horizontal link within a row,
+       * or smooth rounded S-curve corridor between rows (W5->W6, W9->W10).
+       */
+      function computeBackbonePath(a, b) {
+        const sameRow = Math.abs(a.cy - b.cy) < 42;
+        const pad = 4;
+
+        if (sameRow && b.left >= a.right - 6) {
+          const x1 = a.right + 1;
+          const x2 = b.left - pad;
+          const midX = (x1 + x2) / 2;
+          return `M ${x1} ${a.cy} C ${midX} ${a.cy}, ${midX} ${b.cy}, ${x2} ${b.cy}`;
+        }
+
+        const x1 = a.cx;
+        const y1 = a.bottom + 1;
+        const x2 = b.cx;
+        const y2 = b.top - pad;
+        const midY = (y1 + y2) / 2;
+
+        if (Math.abs(x2 - x1) > 40 && y2 > y1 + 14) {
+          const r = Math.min(18, Math.abs(midY - y1) * 0.72, Math.abs(x2 - x1) * 0.3);
+          const dir = x2 < x1 ? -1 : 1;
+          return [
+            `M ${x1} ${y1}`,
+            `L ${x1} ${midY - r}`,
+            `Q ${x1} ${midY}, ${x1 + dir * r} ${midY}`,
+            `L ${x2 - dir * r} ${midY}`,
+            `Q ${x2} ${midY}, ${x2} ${midY + r}`,
+            `L ${x2} ${y2}`
+          ].join(" ");
+        }
+        return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+      }
+
+      /**
+       * Smart non-colliding cubic Bezier router for all 23 typed edges.
+       * Uses sibling offsets for shared pairs (1->6, 2->5) and dedicated
+       * corridors for outer multi-row arcs and inter-lane bridges.
+       */
+      function computeTypedEdgePath(link, a, b, outerLeftX, outerRightX, siblingOffset) {
+        const sameRow = Math.abs(a.cy - b.cy) < 42;
+        const isAdjacentSeq = link.to === link.from + 1;
+        const pad = 5;
+
+        // Case A: Same-row adjacent sequential handoff/spiral (2->3, 3->4, 6->7, 7->8, 8->9, 10->11, 11->12)
+        if (sameRow && isAdjacentSeq && b.left >= a.right - 6) {
+          const x1 = a.right + 1;
+          const x2 = b.left - pad;
+          const midX = (x1 + x2) / 2;
+          return `M ${x1} ${a.cy} C ${midX} ${a.cy}, ${midX} ${b.cy}, ${x2} ${b.cy}`;
+        }
+
+        // Case B: Same-row non-adjacent arc (2->5 in Row 1) — arches smoothly ABOVE the lane
+        if (sameRow && !isAdjacentSeq) {
+          const archLift = siblingOffset < 0 ? 34 : 56;
+          const xShift = siblingOffset < 0 ? -12 : 12;
+          const x1 = a.cx + xShift;
+          const y1 = a.top - 1;
+          const x2 = b.cx + xShift;
+          const y2 = b.top - pad;
+          const topY = Math.min(y1, y2) - archLift;
+          return `M ${x1} ${y1} C ${x1} ${topY}, ${x2} ${topY}, ${x2} ${y2}`;
+        }
+
+        // Case C: Long 2-lane skip outer corridors (1->10 left margin, 5->11 right margin)
+        if (link.from === 1 && link.to === 10) {
+          const x1 = a.left - 1;
+          const y1 = a.cy + 10;
+          const x2 = b.left - pad;
+          const y2 = b.cy - 4;
+          return `M ${x1} ${y1} C ${outerLeftX - 18} ${y1 + 24}, ${outerLeftX - 18} ${y2 - 24}, ${x2} ${y2}`;
+        }
+
+        if (link.from === 5 && link.to === 11) {
+          const x1 = a.right + 1;
+          const y1 = a.cy + 10;
+          const x2 = b.right + pad;
+          const y2 = b.cy - 4;
+          return `M ${x1} ${y1} C ${outerRightX + 18} ${y1 + 42}, ${outerRightX + 18} ${y2 - 28}, ${x2} ${y2}`;
+        }
+
+        // Case D: Row 1 -> Row 3 central sweep (2->11)
+        if (link.from === 2 && link.to === 11) {
+          const x1 = a.cx - 18;
+          const y1 = a.bottom + 1;
+          const x2 = b.cx - 24;
+          const y2 = b.top - pad;
+          const c1x = x1 - 36;
+          const c1y = y1 + (y2 - y1) * 0.42;
+          const c2x = x2 - 42;
+          const c2y = y2 - (y2 - y1) * 0.32;
+          return `M ${x1} ${y1} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${x2} ${y2}`;
+        }
+
+        // Case E: Inter-lane sequential transitions (5->6 Theory, 9->10 Handoff)
+        if (isAdjacentSeq) {
+          return computeBackbonePath(a, b);
+        }
+
+        // Case F: Parallel sibling pair 1->6 (handoff & spiral) — clean separated downward curves
+        if (link.from === 1 && link.to === 6) {
+          const spread = siblingOffset < 0 ? -16 : 16;
+          const x1 = a.cx + spread;
+          const y1 = a.bottom + 1;
+          const x2 = b.cx + spread - 10;
+          const y2 = b.top - pad;
+          const midY = (y1 + y2) / 2;
+          const bend = siblingOffset < 0 ? -24 : 18;
+          return `M ${x1} ${y1} C ${x1 + bend} ${midY}, ${x2 + bend * 0.5} ${midY}, ${x2} ${y2}`;
+        }
+
+        // Case G: Staggered cross-lane bridges (2->6, 4->6, 3->7, 3->8, 5->7, 4->9, 6->10)
+        // Assign subtle deterministic horizontal anchor offsets per link so edges fan cleanly
+        const anchorOffsets = {
+          "t-2-6": { sx: 4,   tx: 16,  biasY: 8 },
+          "h-4-6": { sx: -22, tx: 30,  biasY: -10 },
+          "t-3-7": { sx: -10, tx: -12, biasY: 6 },
+          "t-3-8": { sx: 18,  tx: -16, biasY: -8 },
+          "t-5-7": { sx: -18, tx: 26,  biasY: 12 },
+          "t-4-9": { sx: 22,  tx: 16,  biasY: -6 },
+          "s-6-10": { sx: 0,  tx: 12,  biasY: 6 }
+        };
+
+        const cfg = anchorOffsets[link.id] || { sx: 0, tx: 0, biasY: 0 };
+        const x1 = a.cx + cfg.sx;
+        const y1 = a.bottom + 1;
+        const x2 = b.cx + cfg.tx;
+        const y2 = b.top - pad;
+        const midY = (y1 + y2) / 2 + cfg.biasY;
+
+        return `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+      }
+
+      /* =======================================================================
+         6. COORDINATED VISUAL STATES (LAYERS, EGO-NETWORK, EDGE HOVER/PIN)
+         ======================================================================= */
+      function updateVisualStates() {
+        const egoNodeId = state.hoveredNodeId ?? (state.drawerOpen ? state.selectedId : null);
+        const activeEdgeId = state.hoveredEdgeId ?? state.pinnedEdgeId;
+        const activeEdge = activeEdgeId ? getLink(activeEdgeId) : null;
+
+        const hasGlobalLinkLayer =
+          state.activeLayers.handoff || state.activeLayers.theory || state.activeLayers.spiral;
+
+        // Determine connected peer nodes for ego-network
+        const connectedPeers = new Set();
+        if (egoNodeId !== null) {
+          TYPED_LINKS.forEach((l) => {
+            if (l.from === egoNodeId) connectedPeers.add(l.to);
+            if (l.to === egoNodeId) connectedPeers.add(l.from);
+          });
+        }
+
+        // 1) Update typed edges & hit targets
+        dom.edgesSvg.querySelectorAll(".typed-edge").forEach((path) => {
+          const id = path.dataset.edgeId;
+          const from = Number(path.dataset.from);
+          const to = Number(path.dataset.to);
+          const type = path.dataset.type;
+
+          const layerOn = Boolean(state.activeLayers[type]);
+          const inEgo = egoNodeId !== null && (from === egoNodeId || to === egoNodeId);
+          const isThisActiveEdge = activeEdgeId === id;
+
+          // Edge is visible if its global layer is on, OR it belongs to current ego-network, OR it's pinned/hovered
+          const isVisible = layerOn || inEgo || isThisActiveEdge;
+
+          path.classList.remove("is-hidden-edge", "is-dimmed", "is-ego", "is-active-edge");
+
+          if (!isVisible) {
+            path.classList.add("is-hidden-edge");
+          } else if (isThisActiveEdge) {
+            path.classList.add("is-active-edge");
+          } else if (activeEdge) {
+            path.classList.add("is-dimmed");
+          } else if (egoNodeId !== null) {
+            if (inEgo) {
+              path.classList.add("is-ego");
+            } else {
+              path.classList.add("is-dimmed");
+            }
+          }
+
+          // Enable/disable corresponding 14px interactive hit target
+          const hit = dom.edgesSvg.querySelector(`.edge-hit-target[data-hit-id="${id}"]`);
+          if (hit) {
+            hit.classList.toggle("is-disabled", !isVisible);
+          }
+        });
+
+        // 2) Update backbone paths (subtle dimming when focused)
+        dom.edgesSvg.querySelectorAll(".backbone-path").forEach((bp) => {
+          const shouldDim = egoNodeId !== null || activeEdge !== null || hasGlobalLinkLayer;
+          bp.classList.toggle("is-dimmed", shouldDim);
+        });
+
+        // 3) Update module node states (selected, peer, edge endpoint, dimmed, ethics halo)
+        dom.lanesStack.querySelectorAll(".week-node").forEach((node) => {
+          const id = Number(node.dataset.nodeId);
+          const isSelected = state.drawerOpen && state.selectedId === id;
+          const isExplored = state.explored.has(id);
+          const isEthics = state.activeLayers.ethics && ETHICS_WEEKS.has(id);
+
+          let isEdgeEnd = false;
+          let isPeer = false;
+          let isDimmed = false;
+
+          if (activeEdge) {
+            isEdgeEnd = id === activeEdge.from || id === activeEdge.to;
+            isDimmed = !isEdgeEnd;
+          } else if (egoNodeId !== null) {
+            const isFocus = id === egoNodeId;
+            isPeer = !isFocus && connectedPeers.has(id);
+            isDimmed = !isFocus && !isPeer && !isSelected;
+          } else if (state.activeLayers.ethics && !hasGlobalLinkLayer) {
+            // Gently spotlight the 5 Ethics & Security nodes when Ethics is the sole active filter
+            isDimmed = !ETHICS_WEEKS.has(id);
+          }
+
+          node.classList.toggle("is-selected", isSelected || (state.hoveredNodeId === id && !state.drawerOpen && !activeEdge));
+          node.classList.toggle("is-explored", isExplored);
+          node.classList.toggle("is-ethics-highlight", isEthics);
+          node.classList.toggle("is-connected-peer", isPeer);
+          node.classList.toggle("is-edge-endpoint", isEdgeEnd);
+          node.classList.toggle("is-dimmed", isDimmed);
+        });
+      }
+
+      /* =======================================================================
+         7. INTERACTIVE EDGE TOOLTIP & PINNED EDGE POPOVER
+         ======================================================================= */
+      function showEdgeTooltip(edgeId, clientX, clientY) {
+        if (state.pinnedEdgeId === edgeId) return;
+        const link = getLink(edgeId);
+        if (!link) return;
+        const meta = LINK_TYPES[link.type];
+        const src = getModule(link.from);
+        const dst = getModule(link.to);
+
+        dom.edgeTooltip.innerHTML = `
+          <div class="edge-meta-head">
+            <span class="link-type-badge ${meta.badgeClass}">${escapeHtml(meta.label)}</span>
+          </div>
+          <div class="edge-endpoints">Week ${src.id} &rarr; Week ${dst.id}: ${escapeHtml(src.title)} &rarr; ${escapeHtml(dst.title)}</div>
+          <p class="edge-reason">${escapeHtml(link.reason)}</p>
+          <div class="edge-tooltip-cta">Click line to pin &amp; jump to either week</div>
+        `;
+
+        dom.edgeTooltip.classList.add("is-visible");
+        dom.edgeTooltip.setAttribute("aria-hidden", "false");
+        positionEdgeTooltip(clientX, clientY);
+      }
+
+      function positionEdgeTooltip(clientX, clientY) {
+        const pad = 14;
+        const rect = dom.edgeTooltip.getBoundingClientRect();
+        let left = clientX + 14;
+        let top = clientY + 14;
+
+        if (left + rect.width > window.innerWidth - pad) {
+          left = Math.max(pad, clientX - rect.width - 14);
+        }
+        if (top + rect.height > window.innerHeight - pad) {
+          top = Math.max(pad, clientY - rect.height - 14);
+        }
+
+        dom.edgeTooltip.style.left = `${left}px`;
+        dom.edgeTooltip.style.top = `${top}px`;
+      }
+
+      function hideEdgeTooltip() {
+        dom.edgeTooltip.classList.remove("is-visible");
+        dom.edgeTooltip.setAttribute("aria-hidden", "true");
+      }
+
+      function openEdgePopover(edgeId, clientX, clientY) {
+        const link = getLink(edgeId);
+        if (!link) return;
+        state.pinnedEdgeId = edgeId;
+
+        const meta = LINK_TYPES[link.type];
+        const src = getModule(link.from);
+        const dst = getModule(link.to);
+
+        dom.edgePopover.innerHTML = `
+          <div class="edge-meta-head">
+            <span class="link-type-badge ${meta.badgeClass}">${escapeHtml(meta.label)}</span>
+            <button type="button" id="btn-close-popover" class="popover-close" aria-label="Close connection popover">&times;</button>
+          </div>
+          <div class="edge-endpoints">Week ${src.id} (${escapeHtml(src.title)}) &rarr; Week ${dst.id} (${escapeHtml(dst.title)})</div>
+          <p class="edge-reason">${escapeHtml(link.reason)}</p>
+          <div class="popover-actions">
+            <button type="button" class="popover-btn" data-pop-open="${src.id}">Open Week ${src.id}</button>
+            <button type="button" class="popover-btn is-primary" data-pop-open="${dst.id}">Open Week ${dst.id}</button>
+          </div>
+        `;
+
+        dom.edgePopover.hidden = false;
+
+        // Clamp popover neatly inside viewport
+        const pad = 12;
+        const rect = dom.edgePopover.getBoundingClientRect();
+        let left = clientX - rect.width / 2;
+        let top = clientY + 16;
+
+        if (left < pad) left = pad;
+        if (left + rect.width > window.innerWidth - pad) {
+          left = window.innerWidth - rect.width - pad;
+        }
+        if (top + rect.height > window.innerHeight - pad) {
+          top = Math.max(pad, clientY - rect.height - 16);
+        }
+
+        dom.edgePopover.style.left = `${left}px`;
+        dom.edgePopover.style.top = `${top}px`;
+
+        dom.edgePopover.querySelector("#btn-close-popover").addEventListener("click", closeEdgePopover);
+        dom.edgePopover.querySelectorAll("[data-pop-open]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const targetId = Number(btn.dataset.popOpen);
+            closeEdgePopover();
+            openModule(targetId);
+          });
+        });
+
+        updateVisualStates();
+      }
+
+      function closeEdgePopover() {
+        if (!state.pinnedEdgeId && dom.edgePopover.hidden) return;
+        state.pinnedEdgeId = null;
+        dom.edgePopover.hidden = true;
+        updateVisualStates();
+      }
+
+      /* =======================================================================
+         8. SLIDE-OVER MODULE DETAIL DRAWER
+         ======================================================================= */
+      function renderDrawer() {
+        if (!state.selectedId) return;
+        const mod = getModule(state.selectedId);
+        const phase = getPhase(mod.phase);
+        const isExplored = state.explored.has(mod.id);
+
+        const upstream = TYPED_LINKS.filter((l) => l.to === mod.id);
+        const downstream = TYPED_LINKS.filter((l) => l.from === mod.id);
+
+        const renderConnItems = (links, dir) =>
+          links
+            .map((l) => {
+              const target = getModule(dir === "in" ? l.from : l.to);
+              const meta = LINK_TYPES[l.type];
+              const arrow = dir === "in" ? "&larr;" : "&rarr;";
+              return `
+                <button type="button" class="conn-btn type-${l.type}" data-jump-week="${target.id}">
+                  <div class="conn-btn-head">
+                    <span class="conn-btn-title">${arrow} Week ${target.id}: ${escapeHtml(target.title)}</span>
+                    <span class="link-type-badge ${meta.badgeClass}">${escapeHtml(meta.label)}</span>
+                  </div>
+                  <div class="conn-btn-reason">${escapeHtml(l.reason)}</div>
+                </button>
+              `;
+            })
+            .join("");
+
+        const ethicsNoteHtml = ETHICS_WEEKS.has(mod.id)
+          ? `
+            <div class="ethics-inline-note">
+              <span class="ethics-banner-icon" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
+                  <path d="M9 1.5L3 4v4.2c0 3.7 2.6 6.9 6 7.8 3.4-.9 6-4.1 6-7.8V4L9 1.5z" fill="#FFFFFF"></path>
+                </svg>
+              </span>
+              <span><strong>Ethics &amp; Security (TLO4):</strong> ${escapeHtml(ETHICS_NOTES[mod.id])}</span>
+            </div>
+          `
+          : "";
+
+        const assessPills = mod.assessments
+          .map((a) => `<span class="drawer-assess-pill">${escapeHtml(a)}</span>`)
+          .join("");
+
+        dom.drawer.innerHTML = `
+          <div class="drawer-header">
+            <div class="drawer-top-bar">
+              <div>
+                <div class="drawer-badges">
+                  <span class="drawer-phase-pill">${escapeHtml(phase.badge)} &middot; Week ${mod.id}</span>
+                  ${assessPills}
+                </div>
+                <h2 class="drawer-title">${escapeHtml(mod.title)}</h2>
+              </div>
+              <button type="button" id="btn-drawer-close" class="drawer-close-btn" aria-label="Close module panel">&times;</button>
+            </div>
+
+            <div class="drawer-toolbar">
+              <button type="button" id="btn-mark-explored" class="explored-toggle-btn ${isExplored ? "is-done" : ""}">
+                ${isExplored ? "&#10003; Explored" : "Mark Explored"}
+              </button>
+              <div class="drawer-step-group">
+                <button type="button" id="btn-drawer-prev" class="step-btn" ${mod.id <= 1 ? "disabled" : ""}>&larr; Prev</button>
+                <button type="button" id="btn-drawer-next" class="step-btn is-primary" ${mod.id >= MODULES.length ? "disabled" : ""}>Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="drawer-body">
+            <p class="drawer-overview">${escapeHtml(mod.overview)}</p>
+
+            ${ethicsNoteHtml}
+
+            <!-- Card 1: Theory & HCI Concepts -->
+            <div class="pillar-card pillar-theory">
+              <div class="pillar-kicker">Theory &amp; HCI Concepts</div>
+              <h3 class="pillar-heading">${escapeHtml(mod.theory.heading)}</h3>
+              <p class="pillar-text">${escapeHtml(mod.theory.detail)}</p>
+            </div>
+
+            <!-- Card 2: Practical Delivery & Outputs -->
+            <div class="pillar-card pillar-practice">
+              <div class="pillar-kicker">Practical Delivery &amp; Outputs</div>
+              <h3 class="pillar-heading">${escapeHtml(mod.practice.heading)}</h3>
+              <p class="pillar-text">${escapeHtml(mod.practice.detail)}</p>
+            </div>
+
+            <!-- Card 3: Law of UX Spotlight -->
+            <div class="pillar-card pillar-law">
+              <div class="pillar-kicker">Law of UX Spotlight</div>
+              <h3 class="pillar-heading">${escapeHtml(mod.law.name)}</h3>
+              <p class="pillar-text">${escapeHtml(mod.law.summary)}</p>
+              <div class="law-mini-grid">
+                <div class="law-mini-box">
+                  <strong>How it informs UX Theory</strong>
+                  ${escapeHtml(mod.law.informsTheory)}
+                </div>
+                <div class="law-mini-box">
+                  <strong>How it informs Practical Delivery</strong>
+                  ${escapeHtml(mod.law.informsPractice)}
+                </div>
+              </div>
+            </div>
+
+            <!-- Connections Across the Semester -->
+            <div>
+              <h3 class="section-heading">Connections Across the Semester</h3>
+              ${
+                upstream.length
+                  ? `<div class="conn-group-label">Upstream &middot; Builds On</div>
+                     <div class="conn-list">${renderConnItems(upstream, "in")}</div>`
+                  : ""
+              }
+              ${
+                downstream.length
+                  ? `<div class="conn-group-label" style="margin-top:0.55rem;">Downstream &middot; Feeds Into</div>
+                     <div class="conn-list">${renderConnItems(downstream, "out")}</div>`
+                  : ""
+              }
+            </div>
+
+            <!-- Collapsible Learning Objectives & TLO Mapping -->
+            <details class="syllabus-details">
+              <summary>Module Learning Objectives &amp; TLO Mapping</summary>
+              <div class="details-body">
+                <div>
+                  <div class="conn-group-label" style="margin-top:0.45rem;">Module Learning Objectives</div>
+                  <ul class="obj-list">
+                    ${mod.objectives.map((o) => `<li>${escapeHtml(o)}</li>`).join("")}
+                  </ul>
+                </div>
+                <div>
+                  <div class="conn-group-label">Mapped Topic Learning Outcomes (TLOs)</div>
+                  <div class="tlo-list">
+                    ${mod.tlos
+                      .map((code) => `<div class="tlo-card"><strong>${code}:</strong> ${escapeHtml(TLO_MAP[code])}</div>`)
+                      .join("")}
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        `;
+
+        dom.drawer.querySelector("#btn-drawer-close").addEventListener("click", closeDrawer);
+        dom.drawer.querySelector("#btn-drawer-prev").addEventListener("click", () => stepWeek(-1));
+        dom.drawer.querySelector("#btn-drawer-next").addEventListener("click", () => stepWeek(1));
+        dom.drawer.querySelector("#btn-mark-explored").addEventListener("click", () => toggleExplored(mod.id));
+
+        dom.drawer.querySelectorAll("[data-jump-week]").forEach((btn) => {
+          btn.addEventListener("click", () => openModule(Number(btn.dataset.jumpWeek)));
+        });
+      }
+
+      /* =======================================================================
+         9. HEADER, LAYER BAR, PROGRESS & STEPPER SYNCHRONISATION
+         ======================================================================= */
+      function syncLensUI() {
+        dom.lanesStack.dataset.lens = state.lens;
+        dom.lensBtns.forEach((btn) => {
+          const active = btn.dataset.lens === state.lens;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", String(active));
+        });
+
+        dom.lanesStack.querySelectorAll(".week-node").forEach((node) => {
+          const mod = getModule(Number(node.dataset.nodeId));
+          const sub = node.querySelector(".node-lens-sub");
+          if (sub && mod) {
+            const text = mod.lens[state.lens];
+            sub.textContent = text;
+            sub.title = text;
+            sub.className = `node-lens-sub lens-${state.lens}`;
+          }
+        });
+      }
+
+      function syncLayerBarUI() {
+        dom.layerPills.forEach((pill) => {
+          const active = Boolean(state.activeLayers[pill.dataset.layer]);
+          pill.classList.toggle("is-active", active);
+          pill.setAttribute("aria-pressed", String(active));
+        });
+
+        const allOn = Object.values(state.activeLayers).every(Boolean);
+        dom.btnToggleAll.textContent = allOn ? "Hide All Links" : "Show All Links";
+        dom.btnToggleAll.classList.toggle("is-all-on", allOn);
+
+        // Show Ethics inline banner when Ethics layer is active and not dismissed
+        dom.ethicsBanner.hidden = !(state.activeLayers.ethics && !state.ethicsBannerDismissed);
+
+        updateVisualStates();
+        // Recalculate SVG geometry if showing/hiding the ethics banner shifted layout
+        requestAnimationFrame(drawAllSvgEdges);
+      }
+
+      function syncProgressAndNav() {
+        dom.progressText.textContent = `${state.explored.size} / ${MODULES.length} explored`;
+        const current = state.selectedId ?? 1;
+        dom.btnWeekStatus.textContent = `Week ${current} of ${MODULES.length}`;
+        dom.btnPrev.disabled = state.selectedId !== null && state.selectedId <= 1;
+        dom.btnNext.disabled = state.selectedId !== null && state.selectedId >= MODULES.length;
+      }
+
+      /* =======================================================================
+         10. INTERACTIVE ACTIONS
+         ======================================================================= */
+      function openModule(id) {
+        const clamped = Math.max(1, Math.min(MODULES.length, id));
+        state.selectedId = clamped;
+        state.drawerOpen = true;
+        state.explored.add(clamped);
+        saveExplored();
+
+        dom.introHint.classList.add("is-hidden");
+        renderDrawer();
+        dom.drawer.classList.add("is-open");
+        dom.drawer.setAttribute("aria-hidden", "false");
+        dom.drawerScrim.classList.add("is-open");
+
+        syncProgressAndNav();
+        updateVisualStates();
+      }
+
+      function closeDrawer() {
+        state.drawerOpen = false;
+        state.selectedId = null;
+        dom.drawer.classList.remove("is-open");
+        dom.drawer.setAttribute("aria-hidden", "true");
+        dom.drawerScrim.classList.remove("is-open");
+
+        syncProgressAndNav();
+        updateVisualStates();
+      }
+
+      function stepWeek(delta) {
+        closeEdgePopover();
+        if (!state.drawerOpen || state.selectedId === null) {
+          openModule(delta > 0 ? 1 : MODULES.length);
+          return;
+        }
+        const nextId = state.selectedId + delta;
+        if (nextId >= 1 && nextId <= MODULES.length) {
+          openModule(nextId);
+        }
+      }
+
+      function toggleExplored(id) {
+        if (state.explored.has(id)) {
+          state.explored.delete(id);
+        } else {
+          state.explored.add(id);
+        }
+        saveExplored();
+        syncProgressAndNav();
+        renderDrawer();
+        updateVisualStates();
+      }
+
+      function toggleFullscreen() {
+        try {
+          if (!document.fullscreenElement) {
+            if (dom.shell.requestFullscreen) {
+              dom.shell.requestFullscreen().catch(() => {
+                dom.shell.classList.toggle("is-fullscreen-fallback");
+                requestAnimationFrame(drawAllSvgEdges);
+              });
+            } else {
+              dom.shell.classList.toggle("is-fullscreen-fallback");
+              requestAnimationFrame(drawAllSvgEdges);
+            }
+          } else {
+            document.exitFullscreen();
+          }
+        } catch {
+          dom.shell.classList.toggle("is-fullscreen-fallback");
+          requestAnimationFrame(drawAllSvgEdges);
+        }
+      }
+
+      /* =======================================================================
+         11. EVENT BINDINGS & INITIALISATION
+         ======================================================================= */
+      function init() {
+        // 4-Mode Node Lens buttons
+        dom.lensBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.lens = btn.dataset.lens;
+            syncLensUI();
+          });
+        });
+
+        // Typed Link-Layer Toggle pills
+        dom.layerPills.forEach((pill) => {
+          pill.addEventListener("click", () => {
+            const layer = pill.dataset.layer;
+            const nextState = !state.activeLayers[layer];
+            state.activeLayers[layer] = nextState;
+            if (layer === "ethics" && nextState) {
+              state.ethicsBannerDismissed = false;
+            }
+            closeEdgePopover();
+            syncLayerBarUI();
+          });
+        });
+
+        // Show All / Hide All Links
+        dom.btnToggleAll.addEventListener("click", () => {
+          const allOn = Object.values(state.activeLayers).every(Boolean);
+          const next = !allOn;
+          Object.keys(state.activeLayers).forEach((k) => {
+            state.activeLayers[k] = next;
+          });
+          if (next) state.ethicsBannerDismissed = false;
+          closeEdgePopover();
+          syncLayerBarUI();
+        });
+
+        // Reset all link layers to calm resting backbone
+        dom.btnResetLayers.addEventListener("click", () => {
+          Object.keys(state.activeLayers).forEach((k) => {
+            state.activeLayers[k] = false;
+          });
+          state.ethicsBannerDismissed = false;
+          closeEdgePopover();
+          syncLayerBarUI();
+        });
+
+        // Dismissible Ethics banner close button
+        dom.btnCloseEthicsBanner.addEventListener("click", () => {
+          state.ethicsBannerDismissed = true;
+          dom.ethicsBanner.hidden = true;
+          requestAnimationFrame(drawAllSvgEdges);
+        });
+
+        // Bottom-right self-paced navigation
+        dom.btnPrev.addEventListener("click", () => stepWeek(-1));
+        dom.btnNext.addEventListener("click", () => stepWeek(1));
+        dom.btnWeekStatus.addEventListener("click", () => openModule(state.selectedId ?? 1));
+
+        // Dismiss drawer or edge popover on backdrop/empty canvas click
+        dom.drawerScrim.addEventListener("click", closeDrawer);
+        dom.mapStage.addEventListener("click", (e) => {
+          if (!e.target.closest(".edge-popover") && !e.target.closest(".edge-hit-target")) {
+            closeEdgePopover();
+          }
+          if (state.drawerOpen && !e.target.closest(".week-node")) {
+            closeDrawer();
+          }
+        });
+
+        // Fullscreen toggle
+        dom.btnFullscreen.addEventListener("click", toggleFullscreen);
+
+        // Keyboard shortcuts (ArrowLeft, ArrowRight, Escape)
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            if (!dom.edgePopover.hidden) {
+              closeEdgePopover();
+            } else if (state.drawerOpen) {
+              closeDrawer();
+            }
+          } else if (e.key === "ArrowRight") {
+            stepWeek(1);
+          } else if (e.key === "ArrowLeft") {
+            if (state.drawerOpen && state.selectedId > 1) {
+              stepWeek(-1);
+            }
+          }
+        });
+
+        // Keep SVG edges pixel-accurate across container resizes, fullscreen toggles & scrolling
+        if (typeof ResizeObserver !== "undefined") {
+          const ro = new ResizeObserver(() => drawAllSvgEdges());
+          ro.observe(dom.graphCanvas);
+        }
+        window.addEventListener("resize", drawAllSvgEdges);
+        window.addEventListener("load", drawAllSvgEdges);
+        document.addEventListener("fullscreenchange", () => requestAnimationFrame(drawAllSvgEdges));
+
+        renderGraphNodes();
+        syncLayerBarUI();
+        syncProgressAndNav();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
