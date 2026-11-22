@@ -20,21 +20,31 @@
       --gold-ink: #845C07;
       --gold-soft: #FFF8DC;
       --sand: #F6EEE1;
-      --canvas-bg: #FAF8F4;
-      --canvas-dot: #DCD8CE;
+      --canvas-bg: #F6EEE1;
+
+      /* Shaded Column Panel Palette */
+      --col1-bg: #FCF7E8;
+      --col1-border: #E8D7A8;
+      --col1-accent: #CB9828;
+      --col2-bg: #ECF6F3;
+      --col2-border: #BEDFD4;
+      --col2-accent: #0D7A5F;
+      --col3-bg: #EEF2FA;
+      --col3-border: #C5D2EA;
+      --col3-accent: #232D4B;
 
       /* Semantic Link-Layer Colours */
-      --backbone-rest: #94A3B8;
+      --backbone-rest: #8A99B2;
       --backbone-active: #232D4B;
       --artefact: #0D7A5F;
       --artefact-soft: #E5F5F0;
-      --bridge: #CB9828;
-      --bridge-soft: #FDF5DF;
-      --spiral: #4F46E5;
-      --spiral-soft: #EEF0FF;
-      --tlo4: #D97706;
-      --tlo4-soft: #FEF3C7;
-      --tlo4-ink: #92400E;
+      --theory: #CB9828;
+      --theory-soft: #FDF5DF;
+      --spiral: #3B5CCC;
+      --spiral-soft: #EBF0FF;
+      --ethics: #D97706;
+      --ethics-soft: #FEF3C7;
+      --ethics-ink: #92400E;
 
       /* Surfaces, Borders & Typography */
       --surface: #FFFFFF;
@@ -316,9 +326,9 @@
       box-shadow: 0 0 0 1px rgba(13, 122, 95, 0.2);
     }
 
-    .layer-chip[data-layer="bridge"].is-active {
-      background: var(--bridge-soft);
-      border-color: var(--bridge);
+    .layer-chip[data-layer="theory"].is-active {
+      background: var(--theory-soft);
+      border-color: var(--theory);
       color: var(--gold-ink);
       box-shadow: 0 0 0 1px rgba(203, 152, 40, 0.24);
     }
@@ -326,14 +336,14 @@
     .layer-chip[data-layer="spiral"].is-active {
       background: var(--spiral-soft);
       border-color: var(--spiral);
-      color: #312E81;
-      box-shadow: 0 0 0 1px rgba(79, 70, 229, 0.22);
+      color: #1E3A8A;
+      box-shadow: 0 0 0 1px rgba(59, 92, 204, 0.22);
     }
 
-    .layer-chip[data-layer="tlo4"].is-active {
-      background: var(--tlo4-soft);
-      border-color: var(--tlo4);
-      color: var(--tlo4-ink);
+    .layer-chip[data-layer="ethics"].is-active {
+      background: var(--ethics-soft);
+      border-color: var(--ethics);
+      color: var(--ethics-ink);
       box-shadow: 0 0 0 1px rgba(217, 119, 6, 0.24);
     }
 
@@ -398,7 +408,7 @@
       width: 20px;
       height: 20px;
       border-radius: 5px;
-      background: var(--tlo4);
+      background: var(--ethics);
       color: #FFFFFF;
       display: inline-flex;
       align-items: center;
@@ -412,7 +422,7 @@
       border-radius: 6px;
       border: 1px solid rgba(146, 64, 14, 0.28);
       background: rgba(255, 255, 255, 0.75);
-      color: var(--tlo4-ink);
+      color: var(--ethics-ink);
       font-size: 1rem;
       line-height: 1;
       display: inline-flex;
@@ -422,30 +432,28 @@
     }
 
     .banner-dismiss-btn:hover {
-      background: var(--tlo4);
+      background: var(--ethics);
       color: #FFFFFF;
     }
 
     /* =========================================================================
-       4. MAIN LANDSCAPE CANVAS AREA (3-COLUMN GRID + SVG OVERLAY)
+       4. MAIN LANDSCAPE CANVAS AREA (SOLID SAND + SHADED 3-COLUMN GRID + SVG)
        ========================================================================= */
     .canvas-area {
       position: relative;
       flex: 1;
       min-height: 0;
       overflow: auto;
-      background-color: var(--canvas-bg);
-      background-image: radial-gradient(var(--canvas-dot) 1.25px, transparent 1.25px);
-      background-size: 20px 20px;
+      background: var(--canvas-bg);
     }
 
-    /* Landscape container: preserves 3-column structure with smooth horizontal scroll */
+    /* Landscape container: generous outer corridors for collision-free routing */
     .map-wrapper {
       position: relative;
-      min-width: 960px;
-      max-width: 1400px;
+      min-width: 980px;
+      max-width: 1420px;
       margin: 0 auto;
-      padding: 48px 48px 92px 52px;
+      padding: 46px 46px 76px 50px;
     }
 
     /* Full-coverage SVG layer */
@@ -455,7 +463,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 3;
+      z-index: 5;
       overflow: visible;
     }
 
@@ -463,20 +471,20 @@
     .backbone-path {
       fill: none;
       stroke: var(--backbone-rest);
-      stroke-width: 1.9;
+      stroke-width: 1.85;
       stroke-linecap: round;
-      opacity: 0.85;
+      opacity: 0.78;
       transition: stroke var(--ease), stroke-width var(--ease), opacity var(--ease);
     }
 
     .backbone-path.is-dimmed {
-      opacity: 0.2;
+      opacity: 0.16;
     }
 
     .backbone-path.is-highlighted {
       stroke: var(--backbone-active);
-      stroke-width: 2.4;
-      opacity: 0.95;
+      stroke-width: 2.35;
+      opacity: 0.94;
     }
 
     /* Typed cross-module links */
@@ -489,18 +497,18 @@
 
     .typed-edge.type-artefact {
       stroke: var(--artefact);
-      stroke-width: 2.3;
+      stroke-width: 2.2;
     }
 
-    .typed-edge.type-bridge {
-      stroke: var(--bridge);
-      stroke-width: 2.3;
+    .typed-edge.type-theory {
+      stroke: var(--theory);
+      stroke-width: 2.2;
       stroke-dasharray: 7 4;
     }
 
     .typed-edge.type-spiral {
       stroke: var(--spiral);
-      stroke-width: 2.4;
+      stroke-width: 2.3;
       stroke-dasharray: 2.2 5;
     }
 
@@ -509,18 +517,18 @@
     }
 
     .typed-edge.is-dimmed {
-      opacity: 0.14;
+      opacity: 0.13;
     }
 
     .typed-edge.is-ego {
       opacity: 0.95;
-      stroke-width: 2.6;
+      stroke-width: 2.55;
     }
 
     .typed-edge.is-active {
       opacity: 1;
-      stroke-width: 3.5;
-      filter: drop-shadow(0 2px 6px rgba(24, 32, 56, 0.22));
+      stroke-width: 3.4;
+      filter: drop-shadow(0 2px 6px rgba(24, 32, 56, 0.24));
     }
 
     /* Wide transparent SVG hit target for effortless edge hover & click */
@@ -543,93 +551,104 @@
       position: relative;
       z-index: 2;
       display: grid;
-      grid-template-columns: repeat(3, minmax(220px, 1fr));
-      column-gap: clamp(64px, 7.5vw, 112px);
+      grid-template-columns: repeat(3, minmax(230px, 1fr));
+      column-gap: clamp(64px, 6.4vw, 96px);
       align-items: start;
     }
 
+    /* Shaded Phase Column Panels */
     .phase-column {
       display: flex;
       flex-direction: column;
       min-width: 0;
+      padding: 11px 12px 13px;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(35, 45, 75, 0.05);
     }
 
-    /* Compact Phase Column Header Badge */
+    .phase-column[data-phase="1"] {
+      background: var(--col1-bg);
+      border: 1px solid var(--col1-border);
+      border-top: 4px solid var(--col1-accent);
+    }
+
+    .phase-column[data-phase="2"] {
+      background: var(--col2-bg);
+      border: 1px solid var(--col2-border);
+      border-top: 4px solid var(--col2-accent);
+    }
+
+    .phase-column[data-phase="3"] {
+      background: var(--col3-bg);
+      border: 1px solid var(--col3-border);
+      border-top: 4px solid var(--col3-accent);
+    }
+
+    /* Compact Phase Column Header */
     .phase-header {
       display: flex;
       flex-direction: column;
-      gap: 0.14rem;
-      padding: 0.52rem 0.78rem;
-      margin-bottom: 14px;
-      border-radius: 10px;
-      background: var(--navy);
-      color: #FFFFFF;
-      border-left: 4px solid var(--gold);
-      box-shadow: 0 3px 10px rgba(24, 32, 56, 0.1);
-    }
-
-    .phase-column[data-phase="2"] .phase-header {
-      border-left-color: #2BB694;
-    }
-
-    .phase-column[data-phase="3"] .phase-header {
-      border-left-color: #8A9BFF;
-    }
-
-    .phase-header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.4rem;
+      gap: 0.1rem;
+      padding: 0.1rem 0.2rem 0.52rem;
+      margin-bottom: 10px;
+      border-bottom: 1px solid rgba(35, 45, 75, 0.1);
     }
 
     .phase-badge {
-      font-size: 0.66rem;
+      font-size: 0.65rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.055em;
-      color: var(--gold);
     }
 
-    .phase-column[data-phase="2"] .phase-badge { color: #7EE4C8; }
-    .phase-column[data-phase="3"] .phase-badge { color: #BDC7FF; }
+    .phase-column[data-phase="1"] .phase-badge { color: var(--gold-ink); }
+    .phase-column[data-phase="2"] .phase-badge { color: var(--artefact); }
+    .phase-column[data-phase="3"] .phase-badge { color: var(--navy); }
 
     .phase-title {
       margin: 0;
-      font-size: 0.84rem;
-      font-weight: 700;
+      font-size: 0.86rem;
+      font-weight: 800;
       line-height: 1.2;
-      color: #FFFFFF;
+      color: var(--navy-deep);
     }
 
-    /* Vertical Node Stacks per Column (tuned gaps so all 5 rows fit landscape view) */
+    .phase-assignment {
+      margin: 0.12rem 0 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      line-height: 1.25;
+    }
+
+    /* Vertical Node Stacks per Column (tuned so all 5 rows fit 1280x720 landscape) */
     .column-nodes {
       display: flex;
       flex-direction: column;
     }
 
-    .phase-column[data-phase="1"] .column-nodes { gap: 16px; }
+    .phase-column[data-phase="1"] .column-nodes { gap: 15px; }
     .phase-column[data-phase="2"] .column-nodes { gap: 20px; }
     .phase-column[data-phase="3"] .column-nodes { gap: 24px; }
 
     /* =========================================================================
-       5. COMPACT MODULE NODE CARDS (~74px-84px TALL)
+       5. COMPACT MODULE NODE CARDS (~68px-74px TALL)
        ========================================================================= */
     .week-node {
       position: relative;
       z-index: 4;
       width: 100%;
-      min-height: 76px;
+      min-height: 68px;
       text-align: left;
       background: var(--surface);
       border: 2px solid var(--border);
       border-radius: var(--radius-node);
-      padding: 0.54rem 0.72rem 0.56rem;
+      padding: 0.46rem 0.66rem 0.48rem;
       box-shadow: var(--shadow-node);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 0.28rem;
+      gap: 0.26rem;
       transition:
         transform var(--ease),
         border-color var(--ease),
@@ -639,44 +658,44 @@
     }
 
     /* Subtle Lens-specific border accent at rest */
-    .columns-grid[data-lens="theory"] .week-node   { border-color: #D2D6F7; }
-    .columns-grid[data-lens="practice"] .week-node { border-color: #BEE5D8; }
-    .columns-grid[data-lens="laws"] .week-node     { border-color: #EFDA96; }
+    .columns-grid[data-lens="theory"] .week-node   { border-color: #C7D4FA; }
+    .columns-grid[data-lens="practice"] .week-node { border-color: #B4E2D3; }
+    .columns-grid[data-lens="laws"] .week-node     { border-color: #EED78E; }
 
     .week-node:hover {
       transform: translateY(-2px);
       border-color: var(--navy);
       box-shadow: var(--shadow-hover);
-      z-index: 6;
+      z-index: 7;
     }
 
-    /* Ethics & Security (TLO4) Halo & Shield Badge */
-    .week-node.is-tlo4-active {
-      border-color: var(--tlo4);
-      box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.24), var(--shadow-node);
+    /* Ethics, Legal & Security Halo & Shield Badge */
+    .week-node.is-ethics-active {
+      border-color: var(--ethics);
+      box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.25), var(--shadow-node);
       background: #FFFDF7;
     }
 
-    .tlo4-shield {
+    .ethics-shield {
       display: none;
       align-items: center;
       justify-content: center;
-      width: 19px;
-      height: 19px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      background: var(--tlo4);
+      background: var(--ethics);
       color: #FFFFFF;
       box-shadow: 0 2px 5px rgba(217, 119, 6, 0.32);
       flex-shrink: 0;
     }
 
-    .week-node.is-tlo4-active .tlo4-shield {
+    .week-node.is-ethics-active .ethics-shield {
       display: inline-flex;
     }
 
     /* Ego-Network & Edge Selection States */
     .week-node.is-dimmed {
-      opacity: 0.28;
+      opacity: 0.35;
     }
 
     .week-node.is-peer {
@@ -691,7 +710,7 @@
       border-color: var(--navy);
       box-shadow: 0 0 0 3px rgba(35, 45, 75, 0.18), var(--shadow-hover);
       transform: translateY(-2px);
-      z-index: 6;
+      z-index: 7;
     }
 
     .week-node.is-selected {
@@ -700,20 +719,20 @@
       background: #FFFFFF;
       box-shadow: 0 0 0 3.5px var(--gold), var(--shadow-hover);
       transform: translateY(-2px);
-      z-index: 7;
+      z-index: 8;
     }
 
     .node-row-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.45rem;
+      gap: 0.4rem;
     }
 
     .node-id-title {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.42rem;
       min-width: 0;
     }
 
@@ -721,13 +740,13 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 30px;
-      height: 20px;
-      padding: 0 0.4rem;
+      min-width: 28px;
+      height: 19px;
+      padding: 0 0.36rem;
       border-radius: var(--radius-pill);
       background: var(--navy);
       color: #FFFFFF;
-      font-size: 0.67rem;
+      font-size: 0.65rem;
       font-weight: 800;
       letter-spacing: 0.03em;
       flex-shrink: 0;
@@ -740,10 +759,10 @@
 
     .node-title {
       margin: 0;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       color: var(--navy-deep);
-      line-height: 1.22;
+      line-height: 1.2;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -752,8 +771,39 @@
     .node-indicators {
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.24rem;
       flex-shrink: 0;
+    }
+
+    .node-assess-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 18px;
+      padding: 0 0.34rem;
+      border-radius: 4px;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+    }
+
+    .node-assess-badge.assess-A1 {
+      background: #FDF3D6;
+      color: var(--gold-ink);
+      border-color: #E7CE8A;
+    }
+
+    .node-assess-badge.assess-A2 {
+      background: #E2F4EE;
+      color: #075843;
+      border-color: #B3DEC9;
+    }
+
+    .node-assess-badge.assess-A3 {
+      background: #E7ECF9;
+      color: var(--navy);
+      border-color: #C0CDE8;
     }
 
     .explored-dot {
@@ -763,7 +813,7 @@
       border: 1.5px solid var(--border-strong);
       background: transparent;
       color: transparent;
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       font-weight: 900;
       display: inline-flex;
       align-items: center;
@@ -788,18 +838,18 @@
     .lens-pill-text {
       flex: 1;
       min-width: 0;
-      font-size: 0.7rem;
+      font-size: 0.69rem;
       font-weight: 600;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      padding: 0.14rem 0.45rem;
+      padding: 0.13rem 0.42rem;
       border-radius: 5px;
       transition: background var(--ease), color var(--ease);
     }
 
     .lens-pill-text.lens-journey  { background: var(--sand);          color: var(--navy); }
-    .lens-pill-text.lens-theory   { background: var(--spiral-soft);   color: #312E81; }
+    .lens-pill-text.lens-theory   { background: var(--spiral-soft);   color: #1E3A8A; }
     .lens-pill-text.lens-practice { background: var(--artefact-soft); color: #065F46; }
     .lens-pill-text.lens-laws     { background: var(--gold-soft);     color: var(--gold-ink); border: 1px solid #F1DC92; }
 
@@ -863,8 +913,8 @@
     }
 
     .type-badge.badge-artefact { background: var(--artefact-soft); color: #065F46; }
-    .type-badge.badge-bridge   { background: var(--bridge-soft);   color: var(--gold-ink); }
-    .type-badge.badge-spiral   { background: var(--spiral-soft);   color: #312E81; }
+    .type-badge.badge-theory   { background: var(--theory-soft);   color: var(--gold-ink); }
+    .type-badge.badge-spiral   { background: var(--spiral-soft);   color: #1E3A8A; }
     .type-badge.badge-sequence { background: var(--navy-soft);     color: var(--navy); }
 
     .edge-route-title {
@@ -1108,6 +1158,13 @@
       color: var(--navy);
     }
 
+    .drawer-assess-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.32rem;
+      margin-top: 0.45rem;
+    }
+
     .drawer-title {
       margin: 0;
       font-size: 1.06rem;
@@ -1217,7 +1274,7 @@
 
     .pillar-law {
       background: #FFFDF3;
-      border-left: 4px solid var(--bridge);
+      border-left: 4px solid var(--theory);
     }
 
     .pillar-kicker {
@@ -1314,7 +1371,7 @@
     }
 
     .conn-card.type-artefact { border-left: 3.5px solid var(--artefact); }
-    .conn-card.type-bridge   { border-left: 3.5px solid var(--bridge); }
+    .conn-card.type-theory   { border-left: 3.5px solid var(--theory); }
     .conn-card.type-spiral   { border-left: 3.5px solid var(--spiral); }
     .conn-card.type-sequence { border-left: 3.5px solid var(--navy); }
 
@@ -1417,13 +1474,19 @@
     }
 
     .assess-pill {
-      font-size: 0.72rem;
+      font-size: 0.71rem;
       font-weight: 700;
-      padding: 0.2rem 0.52rem;
+      padding: 0.18rem 0.5rem;
       border-radius: 6px;
       background: var(--sand);
       border: 1px solid #DFCCA8;
       color: var(--navy-deep);
+    }
+
+    .assess-pill.is-synthesis {
+      background: var(--navy-soft);
+      border-color: #C7D1E8;
+      color: var(--navy);
     }
 
     /* Compact Header Adjustments on Narrow LMS IFrames (Keep Map Landscape!) */
@@ -1472,7 +1535,7 @@
 
       <div class="top-right">
         <div class="progress-chip" title="Modules explored across the semester">
-          <span id="progress-count" class="progress-count">1/12</span>
+          <span id="progress-count" class="progress-count">1 / 12 explored</span>
           <div class="progress-track" aria-hidden="true">
             <div id="progress-fill" class="progress-fill"></div>
           </div>
@@ -1497,7 +1560,7 @@
           <span>Artefact Handoffs</span>
         </button>
 
-        <button type="button" class="layer-chip" data-layer="bridge" aria-pressed="false">
+        <button type="button" class="layer-chip" data-layer="theory" aria-pressed="false">
           <svg class="swatch-svg" viewBox="0 0 24 10" aria-hidden="true">
             <line x1="1" y1="5" x2="17" y2="5" stroke="#CB9828" stroke-width="2.4" stroke-dasharray="5 3" stroke-linecap="round"></line>
             <polygon points="16,2 23,5 16,8" fill="#CB9828"></polygon>
@@ -1507,17 +1570,17 @@
 
         <button type="button" class="layer-chip" data-layer="spiral" aria-pressed="false">
           <svg class="swatch-svg" viewBox="0 0 24 10" aria-hidden="true">
-            <line x1="1" y1="5" x2="17" y2="5" stroke="#4F46E5" stroke-width="2.4" stroke-dasharray="2 3.5" stroke-linecap="round"></line>
-            <polygon points="16,2 23,5 16,8" fill="#4F46E5"></polygon>
+            <line x1="1" y1="5" x2="17" y2="5" stroke="#3B5CCC" stroke-width="2.4" stroke-dasharray="2 3.5" stroke-linecap="round"></line>
+            <polygon points="16,2 23,5 16,8" fill="#3B5CCC"></polygon>
           </svg>
           <span>Research &amp; Eval Spiral</span>
         </button>
 
-        <button type="button" class="layer-chip" data-layer="tlo4" aria-pressed="false">
+        <button type="button" class="layer-chip" data-layer="ethics" aria-pressed="false">
           <svg class="swatch-svg" viewBox="0 0 18 16" style="width:15px;height:14px;" aria-hidden="true">
             <path d="M9 1L2.5 3.6v4.1c0 3.7 2.8 6.8 6.5 7.7 3.7-.9 6.5-4 6.5-7.7V3.6L9 1z" fill="#FEF3C7" stroke="#D97706" stroke-width="1.7"></path>
           </svg>
-          <span>Ethics &amp; Security (TLO4)</span>
+          <span>Ethics &amp; Security</span>
         </button>
       </div>
 
@@ -1527,8 +1590,8 @@
       </div>
     </section>
 
-    <!-- 3. DISMISSIBLE INLINE ETHICS & SECURITY (TLO4) BANNER -->
-    <div id="tlo4-banner" class="tlo4-banner" role="region" aria-label="Ethics and Security TLO4 thread summary" hidden>
+    <!-- 3. DISMISSIBLE INLINE ETHICS, LEGAL & SECURITY BANNER -->
+    <div id="ethics-banner" class="tlo4-banner" role="region" aria-label="Ethics, Legal and Security thread summary" hidden>
       <div class="tlo4-banner-left">
         <span class="shield-icon-box" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
@@ -1536,15 +1599,15 @@
           </svg>
         </span>
         <span>
-          <strong>Ethics &amp; Security Thread (TLO4):</strong> Explicitly mapped across <strong>Weeks 1, 2, 3, and 12</strong>
-          (inclusive design, research consent, unbiased Personas, and responsible AI), intersecting practically with
-          <strong>Week 9</strong> database security and user data protection in PHP/MySQL.
+          <strong>Ethics, Legal &amp; Security Thread:</strong> Spans <strong>TLO4</strong> across <strong>Weeks 1, 2, 3, and 12</strong>
+          (inclusive user input, research consent, unbiased Personas, and responsible AI), practical database security and data protection in PHP (<strong>Week 9</strong>),
+          and ethical participant recruitment and data handling in usability testing (<strong>Week 11</strong>).
         </span>
       </div>
-      <button type="button" id="btn-dismiss-tlo4" class="banner-dismiss-btn" aria-label="Dismiss Ethics and Security banner">&times;</button>
+      <button type="button" id="btn-dismiss-ethics" class="banner-dismiss-btn" aria-label="Dismiss Ethics and Security banner">&times;</button>
     </div>
 
-    <!-- 4. MAIN LANDSCAPE CANVAS AREA (3 COLUMNS + SVG LAYER) -->
+    <!-- 4. MAIN LANDSCAPE CANVAS AREA (3 SHADED COLUMNS + SVG LAYER) -->
     <main id="canvas-area" class="canvas-area" aria-label="COMP1103 three-column landscape concept map">
       <div id="map-wrapper" class="map-wrapper">
         <svg id="edges-svg" class="edges-svg" aria-hidden="true"></svg>
@@ -1579,23 +1642,32 @@
       /* =======================================================================
          1. COMPLETE CURRICULUM DATA (COMP1103 UX FUNDAMENTALS — WEEKS 1–12)
          ======================================================================= */
+      const ASSESSMENTS = {
+        A1: { short: "A1", full: "A1: Paper Prototypes and Design Documents" },
+        A2: { short: "A2", full: "A2: Web Build Prototype" },
+        A3: { short: "A3", full: "A3: Usability Evaluation Experiment and Report" }
+      };
+
       const PHASES = [
         {
           id: 1,
-          badge: "Weeks 1–5 · Assessment 1",
-          title: "Phase 1: Discover, Define & Prototype",
+          badge: "Phase 1 · Weeks 1–5",
+          title: "Discover, Define & Prototype",
+          assignmentSubtitle: "A1: Paper Prototypes and Design Documents",
           weeks: [1, 2, 3, 4, 5]
         },
         {
           id: 2,
-          badge: "Weeks 6–9 · Assessment 2",
-          title: "Phase 2: Build the Interactive Web Stack",
+          badge: "Phase 2 · Weeks 6–9",
+          title: "Build the Interactive Web Stack",
+          assignmentSubtitle: "A2: Web Build Prototype",
           weeks: [6, 7, 8, 9]
         },
         {
           id: 3,
-          badge: "Weeks 10–12 · Assessments 3 & 4",
-          title: "Phase 3: Evaluate & Look Ahead",
+          badge: "Phase 3 · Weeks 10–12",
+          title: "Evaluate & Look Ahead",
+          assignmentSubtitle: "A3: Usability Evaluation Experiment and Report",
           weeks: [10, 11, 12]
         }
       ];
@@ -1615,10 +1687,10 @@
           badgeClass: "badge-artefact",
           marker: "url(#arr-artefact)"
         },
-        bridge: {
+        theory: {
           label: "Theory → Practice",
-          badgeClass: "badge-bridge",
-          marker: "url(#arr-bridge)"
+          badgeClass: "badge-theory",
+          marker: "url(#arr-theory)"
         },
         spiral: {
           label: "Research & Eval Spiral",
@@ -1627,14 +1699,15 @@
         }
       };
 
-      const TLO4_WEEKS = new Set([1, 2, 3, 9, 12]);
+      const ETHICS_WEEKS = new Set([1, 2, 3, 9, 11, 12]);
 
-      const TLO4_NOTES = {
+      const ETHICS_NOTES = {
         1: "TLO4 Anchor: Establishes ethical user inclusion and transparent professional documentation from Week 1.",
-        2: "TLO4 Anchor: Applies research ethics, informed consent, and responsible handling of participant data.",
-        3: "TLO4 Anchor: Guards against assumptions and bias by grounding Personas in authentic user evidence.",
-        9: "Security Intersection: Translates ethical responsibility into practical PHP input sanitisation and MySQL database protection.",
-        12: "TLO4 Anchor: Examines legal, ethical, privacy, and accountability questions as AI reshapes UX workflows."
+        2: "TLO4 Anchor: Applies research ethics, informed consent, and responsible handling of participant observations and survey data.",
+        3: "TLO4 Anchor: Guards against stereotyping and designer bias by grounding Personas in authentic user evidence.",
+        9: "Database Security & Protection: Translates ethical responsibility into practical PHP input sanitisation and MySQL data security.",
+        11: "Testing Ethics: Applies ethical participant recruitment, informed consent, psychological safety, and secure session data handling.",
+        12: "TLO4 Anchor: Critically examines ethical, legal, privacy, and accountability questions as AI reshapes UX practice."
       };
 
       const MODULES = [
@@ -1677,7 +1750,7 @@
             "Set up your development environment, including GitHub repositories"
           ],
           tlos: ["TLO1", "TLO4", "TLO5", "TLO6"],
-          assessments: ["Assessment 1", "Assessment 2", "Assessment 4"]
+          assessments: ["A1", "A2"]
         },
         {
           id: 2,
@@ -1716,7 +1789,7 @@
             "Compile your user research notes into a PACT analysis"
           ],
           tlos: ["TLO1", "TLO2", "TLO4", "TLO5", "TLO6"],
-          assessments: ["Assessment 1", "Assessment 4"]
+          assessments: ["A1"]
         },
         {
           id: 3,
@@ -1755,7 +1828,7 @@
             "Create a Persona poster that captures these features into a consumable form"
           ],
           tlos: ["TLO1", "TLO2", "TLO4", "TLO5", "TLO6"],
-          assessments: ["Assessment 1", "Assessment 4"]
+          assessments: ["A1"]
         },
         {
           id: 4,
@@ -1796,7 +1869,7 @@
             "Define the user flow of a typical operation"
           ],
           tlos: ["TLO1", "TLO2", "TLO5", "TLO6"],
-          assessments: ["Assessment 1", "Assessment 4"]
+          assessments: ["A1"]
         },
         {
           id: 5,
@@ -1836,7 +1909,7 @@
             "Apply heuristic evaluation techniques on a paper prototype"
           ],
           tlos: ["TLO1", "TLO2", "TLO3", "TLO5", "TLO6"],
-          assessments: ["Assessment 1", "Assessment 4"]
+          assessments: ["A1"]
         },
         {
           id: 6,
@@ -1877,7 +1950,7 @@
             "Implement a basic web site with static, interconnected pages"
           ],
           tlos: ["TLO2", "TLO5"],
-          assessments: ["Assessment 2", "Assessment 4"]
+          assessments: ["A2"]
         },
         {
           id: 7,
@@ -1918,7 +1991,7 @@
             "Modify the existing HTML structure with style"
           ],
           tlos: ["TLO2", "TLO5"],
-          assessments: ["Assessment 2", "Assessment 4"]
+          assessments: ["A2"]
         },
         {
           id: 8,
@@ -1960,7 +2033,7 @@
             "Add targeted interactivity to the existing website"
           ],
           tlos: ["TLO2", "TLO5"],
-          assessments: ["Assessment 2", "Assessment 4"]
+          assessments: ["A2"]
         },
         {
           id: 9,
@@ -1971,7 +2044,7 @@
           lens: {
             journey: "PHP & MySQL · Tesler's Law",
             theory: "PHP, MySQL & Data Security",
-            practice: "Full-Stack Dynamic Website",
+            practice: "Full-Stack Dynamic Prototype",
             laws: "Tesler's Law"
           },
           theory: {
@@ -1980,7 +2053,7 @@
               "Explores PHP data types, selection, repetition, arrays, functions, database connectivity with MySQL, and protective techniques to safeguard database content."
           },
           practice: {
-            heading: "Dynamic Full-Stack Data-Driven Website (Assessment 2)",
+            heading: "Dynamic Full-Stack Data-Driven Website (A2: Web Build Prototype)",
             detail:
               "Finalise your website with PHP and MySQL back-end support—handling data storage, dynamic rendering, and secure query handling."
           },
@@ -2001,7 +2074,7 @@
             "Finalise the existing website with dynamic, back-end, data-supported functionality"
           ],
           tlos: ["TLO2", "TLO5"],
-          assessments: ["Assessment 2", "Assessment 4"]
+          assessments: ["A2"]
         },
         {
           id: 10,
@@ -2041,7 +2114,7 @@
             "Discuss the value of the Doherty Threshold and how delay in processing can be a detriment to the user experience"
           ],
           tlos: ["TLO1", "TLO3", "TLO5", "TLO6"],
-          assessments: ["Assessment 3", "Assessment 4"]
+          assessments: ["A3"]
         },
         {
           id: 11,
@@ -2061,7 +2134,7 @@
               "Completes the user-centred design paradigm by designing structured participant experiments, selecting capture apparatus, and turning observed evidence into recommendations."
           },
           practice: {
-            heading: "Participant Recruitment, Live Testing & Recommendation Report (Assessment 3)",
+            heading: "Participant Recruitment, Live Testing & Recommendation Report (A3)",
             detail:
               "Design an experiment for your existing website, recruit participants, execute live usability sessions, and draft a professional recommendation report."
           },
@@ -2072,7 +2145,7 @@
             informsTheory:
               "Tests theoretical predictions and UX laws against genuine human behaviour, revealing unexpected breakdowns only empirical observation catches.",
             informsPractice:
-              "Sharpens your Assessment 3 recommendation report—diagnosing *why* participants struggled using Fitts', Hick's, Postel's, or Doherty Threshold principles."
+              "Sharpens your A3 recommendation report—diagnosing why participants struggled using Fitts', Hick's, Postel's, or Doherty Threshold principles."
           },
           objectives: [
             "Design an experiment process to test the usability of the existing website",
@@ -2080,7 +2153,7 @@
             "Consider the results collected and draft a recommendation report"
           ],
           tlos: ["TLO1", "TLO3", "TLO5", "TLO6"],
-          assessments: ["Assessment 3", "Assessment 4"]
+          assessments: ["A3"]
         },
         {
           id: 12,
@@ -2119,121 +2192,226 @@
             "Observe the new and emerging tools that enhance the capabilities of UX professionals"
           ],
           tlos: ["TLO1", "TLO4"],
-          assessments: ["Assessment 4"]
+          assessments: []
         }
       ];
 
-      /* Sequential weekly backbone (always drawn cleanly at rest) */
+      /* Sequential weekly backbone (11 edges, always visible at rest) */
       const BACKBONE = [
         [1, 2], [2, 3], [3, 4], [4, 5],
         [5, 6], [6, 7], [7, 8], [8, 9],
         [9, 10], [10, 11], [11, 12]
       ];
 
-      /* Complete Typed Cross-Module Linkages (13 explicit semantic relationships) */
+      /* Comprehensive, Content-Verified Cross-Module Linkages (28 typed edges) */
       const TYPED_LINKS = [
-        // Artefact Handoffs (Solid Teal #0D7A5F)
+        // --- ARTEFACT HANDOFFS (10 edges, solid Teal #0D7A5F) ---
         {
           id: "art-1-6",
           from: 1,
           to: 6,
           type: "artefact",
-          reason: "GitHub repo & dev environment set up in Week 1 hosts your HTML/CSS/JS/PHP website."
+          reason: "GitHub repository and Markdown documentation environment set up in Week 1 hosts the HTML/CSS/JS/PHP codebase built from Week 6 onward."
+        },
+        {
+          id: "art-2-3",
+          from: 2,
+          to: 3,
+          type: "artefact",
+          reason: "User research notes compiled into a PACT analysis (W2) are synthesised directly into target Persona posters (W3)."
+        },
+        {
+          id: "art-3-4",
+          from: 3,
+          to: 4,
+          type: "artefact",
+          reason: "Persona goals, needs, and pain points (W3) drive the wireframes, storyboards, journey maps, and user flows sketched in Week 4."
+        },
+        {
+          id: "art-4-5",
+          from: 4,
+          to: 5,
+          type: "artefact",
+          reason: "Annotated paper wireframes, storyboards, and sitemaps (W4) become the test artefacts audited via KLM/GOMS, card sorting, preference testing, and heuristics in Week 5."
         },
         {
           id: "art-4-6",
           from: 4,
           to: 6,
           type: "artefact",
-          reason: "Validated sitemap and annotated paper wireframes translate directly into Week 6's interconnected HTML pages."
+          reason: "Validated sitemaps, user flows, and annotated wireframes (W4) translate directly into Week 6's static, interconnected semantic HTML5 pages."
+        },
+        {
+          id: "art-6-7",
+          from: 6,
+          to: 7,
+          type: "artefact",
+          reason: "Semantic HTML5 page structure (W6) provides the elements, classes, and hierarchy targeted by external CSS stylesheets in Week 7."
+        },
+        {
+          id: "art-7-8",
+          from: 7,
+          to: 8,
+          type: "artefact",
+          reason: "Styled HTML/CSS components (W7) gain dynamic state changes and client-side interactivity through JavaScript and the DOM in Week 8."
+        },
+        {
+          id: "art-8-9",
+          from: 8,
+          to: 9,
+          type: "artefact",
+          reason: "Interactive front-end pages (W8) integrate with PHP and MySQL in Week 9 to become a full-stack dynamic web prototype."
+        },
+        {
+          id: "art-9-10",
+          from: 9,
+          to: 10,
+          type: "artefact",
+          reason: "The finalised dynamic website (W9) is critically audited in Week 10 for usefulness (effectiveness), usability (efficiency), and responsiveness."
+        },
+        {
+          id: "art-9-11",
+          from: 9,
+          to: 11,
+          type: "artefact",
+          reason: "The finalised full-stack web prototype (W9) is placed directly in front of recruited participants for live usability testing in Week 11."
         },
 
-        // Theory -> Practice Bridges (Dashed Deep Gold #CB9828)
+        // --- THEORY -> PRACTICE BRIDGES (11 edges, dashed Deep Gold #CB9828) ---
         {
-          id: "br-2-6",
+          id: "th-1-4",
+          from: 1,
+          to: 4,
+          type: "theory",
+          reason: "Jakob's Law (familiar mental models) and the Execution/Evaluation Cycle (W1) guide intuitive navigation layouts and storyboards in Week 4."
+        },
+        {
+          id: "th-1-6",
+          from: 1,
+          to: 6,
+          type: "theory",
+          reason: "Norman's Execution/Evaluation Cycle (W1) expands directly into Shneiderman's Golden Rules (feedback, closure, error prevention) applied in Week 6."
+        },
+        {
+          id: "th-2-6",
           from: 2,
           to: 6,
-          type: "bridge",
-          reason: "Week 2's PACT analysis and Miller's Law chunking directly inform how content is grouped into clean HTML page structures."
+          type: "theory",
+          reason: "Miller's Law (working-memory chunking) and PACT findings (W2) govern how content is grouped into clear semantic HTML sections and menus in Week 6."
         },
         {
-          id: "br-3-7",
+          id: "th-3-7",
           from: 3,
           to: 7,
-          type: "bridge",
-          reason: "Week 3's Persona priorities and Hick's Law guide visual hierarchy and scannable layout in CSS."
+          type: "theory",
+          reason: "Hick's Law (reducing choice complexity for a defined Persona, W3) informs CSS visual hierarchy, grouping, and layout clarity in Week 7."
         },
         {
-          id: "br-3-8",
+          id: "th-3-8",
           from: 3,
           to: 8,
-          type: "bridge",
-          reason: "Hick's Law prioritisation pairs with the Von Restorff Effect to isolate key interactive actions via JavaScript & the DOM."
+          type: "theory",
+          reason: "Hick's Law prioritisation (W3) pairs with Week 8's Von Restorff Effect, using JavaScript/DOM state changes to visually isolate key actions and feedback."
         },
         {
-          id: "br-4-9",
+          id: "th-4-9",
           from: 4,
           to: 9,
-          type: "bridge",
-          reason: "Postel's Law (forgiving input, clear output) connects to Tesler's Law and PHP/MySQL security—back-end code absorbs validation complexity."
+          type: "theory",
+          reason: "Postel's Law (accepting varied user input gracefully while sending clear output, W4) connects to Week 9's Tesler's Law and PHP/MySQL security, shifting validation and data complexity to the server."
         },
         {
-          id: "br-5-6",
+          id: "th-5-6",
           from: 5,
           to: 6,
-          type: "bridge",
-          reason: "Paper-prototype heuristic evaluations connect directly to Shneiderman's Golden Rules and the Aesthetic-Usability Effect before styling hides flaws."
+          type: "theory",
+          reason: "Paper prototype heuristic evaluations (W5) bridge to Shneiderman's Golden Rules (W6), while the Aesthetic-Usability Effect explains why testing unstyled prototypes (W5) and raw HTML (W6) exposes flaws before visual polish hides them."
         },
         {
-          id: "br-5-7",
+          id: "th-5-7",
           from: 5,
           to: 7,
-          type: "bridge",
-          reason: "Predictive GOMS/KLM pointing times on paper translate into physical CSS target sizing and spacing via Fitts' Law."
+          type: "theory",
+          reason: "Predictive GOMS/KLM task-time modelling (W5) directly links to Fitts' Law (W7), where CSS target sizing, padding, and spacing physically minimise pointing time."
+        },
+        {
+          id: "th-6-10",
+          from: 6,
+          to: 10,
+          type: "theory",
+          reason: "Shneiderman's interaction principles and the Aesthetic-Usability Effect (W6) frame Week 10's critique of usefulness, usability, affordances, and metaphors."
+        },
+        {
+          id: "th-8-10",
+          from: 8,
+          to: 10,
+          type: "theory",
+          reason: "Client-side JavaScript DOM feedback (W8) enables Week 10's Doherty Threshold (<400ms perceived pace) by responding instantly without full page reloads."
+        },
+        {
+          id: "th-9-10",
+          from: 9,
+          to: 10,
+          type: "theory",
+          reason: "PHP/MySQL server logic delivers usefulness (effectiveness), while database/server latency directly impacts Week 10's Doherty Threshold."
         },
 
-        // Research & Eval Spiral (Dotted Indigo #4F46E5)
+        // --- RESEARCH & EVALUATION SPIRAL (7 edges, dotted Indigo #3B5CCC) ---
         {
           id: "sp-1-10",
           from: 1,
           to: 10,
           type: "spiral",
-          reason: "Norman's Execution/Evaluation Cycle returns when critiquing affordances, metaphors, and Doherty Threshold responsiveness."
+          reason: "Week 1's Execution/Evaluation Cycle returns at full-system scale in Week 10 to evaluate affordances, metaphors, and processing delays."
+        },
+        {
+          id: "sp-1-12",
+          from: 1,
+          to: 12,
+          type: "spiral",
+          reason: "Week 1's introduction to multidisciplinary UX fields spirals back in Week 12 as students map specialist UX industry roles and AI workflows."
         },
         {
           id: "sp-2-5",
           from: 2,
           to: 5,
           type: "spiral",
-          reason: "Week 2's user data collection & Miller's Law chunking are revisited via card sorting and preference testing on paper prototypes."
+          reason: "Qualitative/quantitative research and Miller's Law chunking (W2) spiral into Week 5's card sorting and preference testing to verify information architecture with users."
         },
         {
           id: "sp-2-11",
           from: 2,
           to: 11,
           type: "spiral",
-          reason: "Foundational observation, ethics, and data-capture skills scale up into live participant usability experiments."
+          reason: "User-centred observation, recruitment, and data synthesis skills (W2) return at full experimental rigour in Week 11's usability evaluation."
         },
         {
           id: "sp-5-11",
           from: 5,
           to: 11,
           type: "spiral",
-          reason: "Early pre-code evaluation methods evolve into formal empirical usability testing and a recommendation report on the working site."
+          reason: "Pre-code predictive (GOMS/KLM) and heuristic evaluations (W5) spiral into Week 11's empirical usability experiment and recommendation report on the live site."
         },
         {
-          id: "sp-6-10",
+          id: "sp-6-11",
           from: 6,
-          to: 10,
+          to: 11,
           type: "spiral",
-          reason: "Shneiderman's Golden Rules established before coding form core criteria for critiquing usefulness and usability on the finished site."
+          reason: "Week 6's Aesthetic-Usability Effect warns evaluators in Week 11 to rely on objective experimental metrics rather than surface visual appeal alone."
+        },
+        {
+          id: "sp-10-11",
+          from: 10,
+          to: 11,
+          type: "spiral",
+          reason: "Usefulness, usability, affordance, and Doherty Threshold criteria (W10) shape the test tasks, data-capture apparatus, and recommendations in Week 11."
         }
       ];
 
       /* =======================================================================
          2. STATE MANAGEMENT & LMS-SAFE STORAGE
          ======================================================================= */
-      const STORAGE_KEY = "comp1103_landscape_map_explored_v1";
+      const STORAGE_KEY = "comp1103_landscape_map_explored_v2";
 
       function loadExplored() {
         try {
@@ -2258,11 +2436,11 @@
         lens: "journey",          // "journey" | "theory" | "practice" | "laws"
         layers: {
           artefact: false,
-          bridge: false,
+          theory: false,
           spiral: false,
-          tlo4: false
+          ethics: false
         },
-        tlo4BannerDismissed: false,
+        ethicsBannerDismissed: false,
         selectedId: null,
         drawerOpen: false,
         hoveredNodeId: null,
@@ -2280,8 +2458,8 @@
         layerChips: document.querySelectorAll(".layer-chip"),
         btnShowAll: document.getElementById("btn-show-all"),
         btnReset: document.getElementById("btn-reset"),
-        tlo4Banner: document.getElementById("tlo4-banner"),
-        btnDismissTlo4: document.getElementById("btn-dismiss-tlo4"),
+        ethicsBanner: document.getElementById("ethics-banner"),
+        btnDismissEthics: document.getElementById("btn-dismiss-ethics"),
         progressCount: document.getElementById("progress-count"),
         progressFill: document.getElementById("progress-fill"),
         btnFullscreen: document.getElementById("btn-fullscreen"),
@@ -2311,7 +2489,7 @@
       }
 
       /* =======================================================================
-         4. RENDER 3-COLUMN LANDSCAPE NODE GRID
+         4. RENDER 3-COLUMN SHADED LANDSCAPE NODE GRID
          ======================================================================= */
       function renderColumns() {
         dom.columnsGrid.dataset.lens = state.lens;
@@ -2322,6 +2500,12 @@
               const mod = getModule(weekId);
               const isExplored = state.explored.has(mod.id);
               const lensText = mod.lens[state.lens];
+              const assessBadgesHtml = mod.assessments
+                .map(
+                  (code) =>
+                    `<span class="node-assess-badge assess-${code}" title="${escapeHtml(ASSESSMENTS[code].full)}">${code}</span>`
+                )
+                .join("");
 
               return `
                 <button
@@ -2336,7 +2520,8 @@
                       <h2 class="node-title" title="${escapeHtml(mod.title)}">${escapeHtml(mod.title)}</h2>
                     </div>
                     <div class="node-indicators">
-                      <span class="tlo4-shield" title="Ethics & Security (TLO4) Thread" aria-hidden="true">
+                      ${assessBadgesHtml}
+                      <span class="ethics-shield" title="Ethics, Legal & Security Thread" aria-hidden="true">
                         <svg width="10" height="10" viewBox="0 0 18 18" fill="none">
                           <path d="M9 1.5L3 4v4.2c0 3.7 2.6 6.9 6 7.8 3.4-.9 6-4.1 6-7.8V4L9 1.5z" fill="#FFFFFF"></path>
                         </svg>
@@ -2354,11 +2539,10 @@
 
           return `
             <section class="phase-column" data-phase="${phase.id}" aria-label="${escapeHtml(phase.title)}">
-              <div class="phase-header" data-phase-header="${phase.id}">
-                <div class="phase-header-top">
-                  <span class="phase-badge">${escapeHtml(phase.badge)}</span>
-                </div>
+              <div class="phase-header">
+                <span class="phase-badge">${escapeHtml(phase.badge)}</span>
                 <h2 class="phase-title">${escapeHtml(phase.title)}</h2>
+                <p class="phase-assignment">${escapeHtml(phase.assignmentSubtitle)}</p>
               </div>
               <div class="column-nodes">${cardsHtml}</div>
             </section>
@@ -2393,13 +2577,9 @@
       }
 
       /* =======================================================================
-         5. COLLISION-AVOIDANT LANDSCAPE SVG EDGE ROUTING
+         5. SMART PORT-STAGGERED, COLLISION-AVOIDANT LANDSCAPE SVG ROUTING
          ======================================================================= */
-      /**
-       * Converts a polyline waypoint list into a smooth SVG path with rounded
-       * quadratic corners so orthogonal corridors never kink or overlap cards.
-       */
-      function buildRoundedPath(points, radius = 16) {
+      function buildRoundedPath(points, radius = 15) {
         if (!points || points.length < 2) return "";
         if (points.length === 2) {
           return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
@@ -2435,6 +2615,20 @@
         return d;
       }
 
+      /**
+       * Allocates vertically staggered anchor Y coordinates along a node's
+       * left or right side so shared edges fan cleanly without overlapping.
+       */
+      function computePortY(node, index, total) {
+        if (total <= 1) return node.cy;
+        const pad = 10;
+        const maxSpan = Math.max(12, node.h - pad * 2);
+        const idealStep = 11;
+        const span = Math.min(maxSpan, (total - 1) * idealStep);
+        const startY = node.cy - span / 2;
+        return startY + (span * index) / (total - 1);
+      }
+
       function drawAllEdges() {
         const wrapRect = dom.mapWrapper.getBoundingClientRect();
         if (!wrapRect.width || !wrapRect.height) return;
@@ -2444,7 +2638,10 @@
         dom.columnsGrid.querySelectorAll(".week-node").forEach((el) => {
           const id = Number(el.dataset.nodeId);
           const r = el.getBoundingClientRect();
+          const mod = getModule(id);
           nodes.set(id, {
+            id,
+            phase: mod.phase,
             left: r.left - wrapRect.left,
             right: r.right - wrapRect.left,
             top: r.top - wrapRect.top,
@@ -2456,68 +2653,136 @@
           });
         });
 
-        // Collect column header top coordinate for routing 1->10 cleanly above Column 2
-        let minHeaderTop = Infinity;
-        dom.columnsGrid.querySelectorAll(".phase-header").forEach((el) => {
-          const t = el.getBoundingClientRect().top - wrapRect.top;
-          if (t < minHeaderTop) minHeaderTop = t;
+        // Collect shaded column panel bounds for guaranteed outer-corridor clearance
+        const cols = new Map();
+        dom.columnsGrid.querySelectorAll(".phase-column").forEach((el) => {
+          const p = Number(el.dataset.phase);
+          const r = el.getBoundingClientRect();
+          cols.set(p, {
+            left: r.left - wrapRect.left,
+            right: r.right - wrapRect.left,
+            top: r.top - wrapRect.top,
+            bottom: r.bottom - wrapRect.top
+          });
         });
 
-        const n1 = nodes.get(1);
-        const n5 = nodes.get(5);
-        const n6 = nodes.get(6);
-        const n9 = nodes.get(9);
-        const n10 = nodes.get(10);
-        if (!n1 || !n5 || !n6 || !n9 || !n10) return;
+        const c1 = cols.get(1);
+        const c2 = cols.get(2);
+        const c3 = cols.get(3);
+        if (!c1 || !c2 || !c3) return;
 
-        // Compute clean gutter geometry
-        const gutter12Left = n1.right;
-        const gutter12Right = n6.left;
-        const gutter12Mid = (gutter12Left + gutter12Right) / 2;
-        const gutter12W = gutter12Right - gutter12Left;
+        // Inter-column gutters & outer perimeter corridors
+        const g12Left = c1.right;
+        const g12Right = c2.left;
+        const g12W = g12Right - g12Left;
+        const g12Mid = (g12Left + g12Right) / 2;
 
-        const gutter23Left = n6.right;
-        const gutter23Right = n10.left;
-        const gutter23Mid = (gutter23Left + gutter23Right) / 2;
-        const gutter23W = gutter23Right - gutter23Left;
+        const g23Left = c2.right;
+        const g23Right = c3.left;
+        const g23W = g23Right - g23Left;
+        const g23Mid = (g23Left + g23Right) / 2;
 
-        const leftMarginX = Math.max(12, n1.left - 34);
-        const topCorridorY = Math.max(12, minHeaderTop - 22);
-        const underBaseY = Math.max(n9.bottom + 24, n5.bottom + 22);
+        const minPanelTop = Math.min(c1.top, c2.top, c3.top);
+        const maxPanelBottom = Math.max(c1.bottom, c2.bottom, c3.bottom);
+
+        const topLane1Y = Math.max(16, minPanelTop - 16);   // 1 -> 10
+        const topLane2Y = Math.max(6, minPanelTop - 30);    // 1 -> 12
+        const botLane1Y = maxPanelBottom + 16;              // 5 -> 11
+        const botLane2Y = maxPanelBottom + 32;              // 2 -> 11
+        const outerLeft1X = Math.max(20, c1.left - 18);     // 1 -> 4
+        const outerLeft2X = Math.max(8, c1.left - 34);      // 2 -> 5
+        const outerRightX = c3.right + 20;                  // 1 -> 12 right descent
+
+        // Classify edges and gather right-exit / left-entry port groups for smart staggering
+        const rightGroups = new Map();
+        const leftGroups = new Map();
+        const typeOrder = { artefact: 0, theory: 1, spiral: 2 };
+
+        const pushPort = (map, nodeId, item) => {
+          if (!map.has(nodeId)) map.set(nodeId, []);
+          map.get(nodeId).push(item);
+        };
+
+        const classified = TYPED_LINKS.map((link) => {
+          const a = nodes.get(link.from);
+          const b = nodes.get(link.to);
+          let kind = "adj-col";
+
+          if (a.phase === b.phase) {
+            kind = link.to === link.from + 1 ? "intra-adj" : "intra-skip";
+          } else if (b.phase - a.phase === 2) {
+            kind = link.id === "sp-1-10" || link.id === "sp-1-12" ? "long-top" : "long-bottom";
+          }
+
+          if (kind === "adj-col" || kind === "long-top" || kind === "long-bottom") {
+            let outSort = b.cy * 10 + typeOrder[link.type];
+            if (link.id === "sp-1-12") outSort = -20000;
+            else if (link.id === "sp-1-10") outSort = -10000;
+            else if (link.id === "sp-5-11") outSort = 100000;
+            else if (link.id === "sp-2-11") outSort = 110000;
+            pushPort(rightGroups, link.from, { id: link.id, sort: outSort });
+          }
+
+          if (kind === "adj-col" || link.id === "sp-1-10" || kind === "long-bottom") {
+            let inSort = a.cy * 10 + typeOrder[link.type];
+            if (link.id === "sp-1-10") inSort = -10000;
+            else if (link.id === "sp-5-11") inSort = 100000;
+            else if (link.id === "sp-2-11") inSort = 110000;
+            pushPort(leftGroups, link.to, { id: link.id, sort: inSort });
+          }
+
+          return { link, a, b, kind };
+        });
+
+        const rightPortY = new Map();
+        rightGroups.forEach((items, nodeId) => {
+          items.sort((x, y) => x.sort - y.sort);
+          const node = nodes.get(nodeId);
+          items.forEach((item, idx) => {
+            rightPortY.set(item.id, computePortY(node, idx, items.length));
+          });
+        });
+
+        const leftPortY = new Map();
+        leftGroups.forEach((items, nodeId) => {
+          items.sort((x, y) => x.sort - y.sort);
+          const node = nodes.get(nodeId);
+          items.forEach((item, idx) => {
+            leftPortY.set(item.id, computePortY(node, idx, items.length));
+          });
+        });
 
         const defs = `
           <defs>
-            <marker id="arr-backbone" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
-              <path d="M 0 1.2 L 9.2 5 L 0 8.8 z" fill="#94A3B8"></path>
+            <marker id="arr-backbone" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.4" markerHeight="5.4" orient="auto">
+              <path d="M 0 1.2 L 9.2 5 L 0 8.8 z" fill="#8A99B2"></path>
             </marker>
-            <marker id="arr-backbone-hi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <marker id="arr-backbone-hi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.8" markerHeight="5.8" orient="auto">
               <path d="M 0 1.2 L 9.2 5 L 0 8.8 z" fill="#232D4B"></path>
             </marker>
-            <marker id="arr-artefact" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto">
+            <marker id="arr-artefact" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
               <path d="M 0 1 L 9.5 5 L 0 9 z" fill="#0D7A5F"></path>
             </marker>
-            <marker id="arr-bridge" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto">
+            <marker id="arr-theory" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
               <path d="M 0 1 L 9.5 5 L 0 9 z" fill="#CB9828"></path>
             </marker>
-            <marker id="arr-spiral" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6.2" markerHeight="6.2" orient="auto">
-              <path d="M 0 1 L 9.5 5 L 0 9 z" fill="#4F46E5"></path>
+            <marker id="arr-spiral" viewBox="0 0 10 10" refX="8.2" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 1 L 9.5 5 L 0 9 z" fill="#3B5CCC"></path>
             </marker>
           </defs>
         `;
 
-        // 1) Sequential Backbone Paths (vertical intra-column + S-elbow 5->6 and 9->10)
+        // 1) Sequential Backbone Paths (11 edges: vertical intra-column + S-elbows 5->6 and 9->10)
         const backboneHtml = BACKBONE.map(([fromId, toId]) => {
           const a = nodes.get(fromId);
           const b = nodes.get(toId);
           if (!a || !b) return "";
 
           let d = "";
-          if (Math.abs(a.cx - b.cx) < 40) {
-            // Clean intra-column vertical connector
+          if (a.phase === b.phase) {
             d = `M ${a.cx} ${a.bottom + 1} L ${b.cx} ${b.top - 5}`;
           } else {
-            // Smooth rounded S-elbow up through the inter-column gutter midpoint
-            const midX = (a.right + b.left) / 2;
+            const midX = a.phase === 1 ? g12Mid : g23Mid;
             d = buildRoundedPath(
               [
                 { x: a.right + 1, y: a.cy },
@@ -2525,102 +2790,114 @@
                 { x: midX, y: b.cy },
                 { x: b.left - 5, y: b.cy }
               ],
-              18
+              16
             );
           }
 
           return `<path class="backbone-path" data-b-from="${fromId}" data-b-to="${toId}" d="${d}" marker-end="url(#arr-backbone)" />`;
         }).join("");
 
-        // Vertical anchor fanning offsets for adjacent cross-column links so shared edges separate cleanly
-        const fanOffsets = {
-          "art-1-6": { sy: 0,   ty: -16 },
-          "br-2-6":  { sy: -8,  ty: -6  },
-          "art-4-6": { sy: -10, ty: 6   },
-          "br-5-6":  { sy: -12, ty: 16  },
-          "br-3-7":  { sy: -9,  ty: -9  },
-          "br-5-7":  { sy: 0,   ty: 10  },
-          "br-3-8":  { sy: 9,   ty: 0   },
-          "br-4-9":  { sy: 10,  ty: 0   },
-          "sp-6-10": { sy: 0,   ty: 0   }
-        };
-
-        // 2) Typed Cross-Module Edges + Transparent 14px Hit Targets
+        // 2) Typed Cross-Module Edges (28 edges) + Transparent 14px Hit Targets
         const visibleEdges = [];
         const hitEdges = [];
 
-        TYPED_LINKS.forEach((link) => {
-          const a = nodes.get(link.from);
-          const b = nodes.get(link.to);
-          if (!a || !b) return;
-
+        classified.forEach(({ link, a, b, kind }) => {
           let d = "";
 
-          if (link.id === "sp-2-5") {
-            // Intra-column skip link 2->5: arcs cleanly outside LEFT gutter of Column 1
+          if (kind === "intra-adj") {
+            // Parallel offset from center backbone so both lines stay distinct and hoverable
+            const x = a.cx + 22;
+            d = `M ${x} ${a.bottom + 1} L ${x} ${b.top - 5}`;
+          } else if (kind === "intra-skip") {
+            // Outer-left Col 1 bypass arcs staggered by span depth (1->4 inner, 2->5 outer)
+            const laneX = link.id === "th-1-4" ? outerLeft1X : outerLeft2X;
             d = buildRoundedPath(
               [
                 { x: a.left - 1, y: a.cy },
-                { x: leftMarginX, y: a.cy },
-                { x: leftMarginX, y: b.cy },
+                { x: laneX, y: a.cy },
+                { x: laneX, y: b.cy },
                 { x: b.left - 5, y: b.cy }
               ],
-              20
+              16
             );
           } else if (link.id === "sp-1-10") {
-            // Long-span 1->10: arches smoothly ABOVE Column 2's header inside top padding
-            const startX = a.right - 22;
-            const endX = b.left + 22;
+            // Upper outer corridor above Column 2: W1.right -> Col 1-2 gutter -> Top Lane 1 -> Col 2-3 gutter -> W10.left
+            const sy = rightPortY.get(link.id) ?? a.cy;
+            const ty = leftPortY.get(link.id) ?? b.cy;
+            const gx1 = g12Left + g12W * 0.28;
+            const gx2 = g23Left + g23W * 0.30;
             d = buildRoundedPath(
               [
-                { x: startX, y: a.top - 1 },
-                { x: startX, y: topCorridorY },
-                { x: endX, y: topCorridorY },
-                { x: endX, y: b.top - 5 }
+                { x: a.right + 1, y: sy },
+                { x: gx1, y: sy },
+                { x: gx1, y: topLane1Y },
+                { x: gx2, y: topLane1Y },
+                { x: gx2, y: ty },
+                { x: b.left - 5, y: ty }
               ],
-              18
+              14
+            );
+          } else if (link.id === "sp-1-12") {
+            // Outer perimeter arc above Columns 2 & 3 and down outer right gutter to W12.right
+            const sy = rightPortY.get(link.id) ?? a.cy;
+            const gx1 = g12Left + g12W * 0.14;
+            d = buildRoundedPath(
+              [
+                { x: a.right + 1, y: sy },
+                { x: gx1, y: sy },
+                { x: gx1, y: topLane2Y },
+                { x: outerRightX, y: topLane2Y },
+                { x: outerRightX, y: b.cy },
+                { x: b.right + 5, y: b.cy }
+              ],
+              16
             );
           } else if (link.id === "sp-5-11") {
-            // Long-span 5->11: drops via Col 1-2 gutter, arches UNDER Column 2, enters W11 left
-            const gx1 = gutter12Left + gutter12W * 0.62;
-            const gx2 = gutter23Left + gutter23W * 0.36;
-            const underY = underBaseY;
+            // Bottom outer corridor Lane 1 below Column 2: W5.right -> Col 1-2 gutter -> Bot Lane 1 -> Col 2-3 gutter -> W11.left
+            const sy = rightPortY.get(link.id) ?? a.cy;
+            const ty = leftPortY.get(link.id) ?? b.cy;
+            const gx1 = g12Left + g12W * 0.72;
+            const gx2 = g23Left + g23W * 0.32;
             d = buildRoundedPath(
               [
-                { x: a.right + 1, y: a.cy + 14 },
-                { x: gx1, y: a.cy + 14 },
-                { x: gx1, y: underY },
-                { x: gx2, y: underY },
-                { x: gx2, y: b.cy + 9 },
-                { x: b.left - 5, y: b.cy + 9 }
+                { x: a.right + 1, y: sy },
+                { x: gx1, y: sy },
+                { x: gx1, y: botLane1Y },
+                { x: gx2, y: botLane1Y },
+                { x: gx2, y: ty },
+                { x: b.left - 5, y: ty }
               ],
-              16
+              14
             );
           } else if (link.id === "sp-2-11") {
-            // Long-span 2->11: drops via Col 1-2 gutter, arches UNDER Column 2 staggered +18px, enters W11 left
-            const gx1 = gutter12Left + gutter12W * 0.34;
-            const gx2 = gutter23Left + gutter23W * 0.66;
-            const underY = underBaseY + 18;
+            // Bottom outer corridor Lane 2 below Column 2: W2.right -> Col 1-2 gutter -> Bot Lane 2 -> Col 2-3 gutter -> W11.left
+            const sy = rightPortY.get(link.id) ?? a.cy;
+            const ty = leftPortY.get(link.id) ?? b.cy;
+            const gx1 = g12Left + g12W * 0.24;
+            const gx2 = g23Left + g23W * 0.72;
             d = buildRoundedPath(
               [
-                { x: a.right + 1, y: a.cy + 12 },
-                { x: gx1, y: a.cy + 12 },
-                { x: gx1, y: underY },
-                { x: gx2, y: underY },
-                { x: gx2, y: b.cy - 9 },
-                { x: b.left - 5, y: b.cy - 9 }
+                { x: a.right + 1, y: sy },
+                { x: gx1, y: sy },
+                { x: gx1, y: botLane2Y },
+                { x: gx2, y: botLane2Y },
+                { x: gx2, y: ty },
+                { x: b.left - 5, y: ty }
               ],
-              16
+              14
             );
           } else {
-            // Adjacent cross-column links (Col 1 -> Col 2, Col 2 -> Col 3): smooth cubic Bezier inside gutter
-            const off = fanOffsets[link.id] || { sy: 0, ty: 0 };
+            // Adjacent cross-column links (Col 1 -> Col 2, Col 2 -> Col 3): staggered cubic Bezier across gutter
             const x1 = a.right + 1;
-            const y1 = a.cy + off.sy;
+            const y1 = rightPortY.get(link.id) ?? a.cy;
             const x2 = b.left - 5;
-            const y2 = b.cy + off.ty;
-            const dx = Math.max(24, (x2 - x1) * 0.48);
-            d = `M ${x1} ${y1} C ${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`;
+            const y2 = leftPortY.get(link.id) ?? b.cy;
+            const gapX = x2 - x1;
+            // Subtle curve separation for dual-typed pairs sharing endpoints (e.g., 1->6, 9->10)
+            const tensionBias = link.type === "artefact" ? 0.42 : link.type === "theory" ? 0.54 : 0.48;
+            const c1x = x1 + gapX * tensionBias;
+            const c2x = x2 - gapX * (1 - tensionBias);
+            d = `M ${x1} ${y1} C ${c1x} ${y1}, ${c2x} ${y2}, ${x2} ${y2}`;
           }
 
           const meta = LINK_META[link.type];
@@ -2674,7 +2951,7 @@
         const egoId = state.hoveredNodeId ?? (state.drawerOpen ? state.selectedId : null);
         const activeEdgeId = state.hoveredEdgeId ?? state.pinnedEdgeId;
         const activeEdge = activeEdgeId ? getLink(activeEdgeId) : null;
-        const anyLinkLayerOn = state.layers.artefact || state.layers.bridge || state.layers.spiral;
+        const anyLinkLayerOn = state.layers.artefact || state.layers.theory || state.layers.spiral;
 
         // Collect all peer nodes connected to egoId (via typed links + sequential neighbours)
         const egoPeers = new Set();
@@ -2750,7 +3027,7 @@
           const id = Number(node.dataset.nodeId);
           const isSelected = state.drawerOpen && state.selectedId === id;
           const isExplored = state.explored.has(id);
-          const isTlo4 = state.layers.tlo4 && TLO4_WEEKS.has(id);
+          const isEthics = state.layers.ethics && ETHICS_WEEKS.has(id);
 
           let isEdgeEnd = false;
           let isPeer = false;
@@ -2763,13 +3040,13 @@
             const isFocus = id === egoId;
             isPeer = !isFocus && egoPeers.has(id);
             isDimmed = !isFocus && !isPeer && !isSelected;
-          } else if (state.layers.tlo4 && !anyLinkLayerOn) {
-            isDimmed = !TLO4_WEEKS.has(id);
+          } else if (state.layers.ethics && !anyLinkLayerOn) {
+            isDimmed = !ETHICS_WEEKS.has(id);
           }
 
           node.classList.toggle("is-selected", isSelected || (state.hoveredNodeId === id && !state.drawerOpen && !activeEdge));
           node.classList.toggle("is-explored", isExplored);
-          node.classList.toggle("is-tlo4-active", isTlo4);
+          node.classList.toggle("is-ethics-active", isEthics);
           node.classList.toggle("is-peer", isPeer);
           node.classList.toggle("is-edge-end", isEdgeEnd);
           node.classList.toggle("is-dimmed", isDimmed);
@@ -2892,11 +3169,18 @@
         const phase = getPhase(mod.phase);
         const isExplored = state.explored.has(mod.id);
 
+        // Build exact Assignment pill(s) or Non-Assessed Topic Synthesis label
+        const assignmentPillsHtml = mod.assessments.length
+          ? mod.assessments
+              .map((code) => `<span class="assess-pill">${escapeHtml(ASSESSMENTS[code].full)}</span>`)
+              .join("")
+          : `<span class="assess-pill is-synthesis">Topic Synthesis (Non-Assessed)</span>`;
+
         // Gather typed upstream/downstream links
         const upstream = TYPED_LINKS.filter((l) => l.to === mod.id);
         const downstream = TYPED_LINKS.filter((l) => l.from === mod.id);
 
-        // Include sequential neighbour fallback when a week has no typed link in that direction
+        // Include sequential neighbour only when not already represented by a typed edge
         const hasPrevTyped = upstream.some((l) => l.from === mod.id - 1);
         const hasNextTyped = downstream.some((l) => l.to === mod.id + 1);
 
@@ -2958,7 +3242,7 @@
             })
             .join("");
 
-        const tlo4Callout = TLO4_WEEKS.has(mod.id)
+        const ethicsCallout = ETHICS_WEEKS.has(mod.id)
           ? `
             <div class="drawer-tlo4-note">
               <span class="shield-icon-box" aria-hidden="true">
@@ -2966,7 +3250,7 @@
                   <path d="M9 1.5L3 4v4.2c0 3.7 2.6 6.9 6 7.8 3.4-.9 6-4.1 6-7.8V4L9 1.5z" fill="#FFFFFF"></path>
                 </svg>
               </span>
-              <span><strong>Ethics &amp; Security (TLO4):</strong> ${escapeHtml(TLO4_NOTES[mod.id])}</span>
+              <span><strong>Ethics, Legal &amp; Security:</strong> ${escapeHtml(ETHICS_NOTES[mod.id])}</span>
             </div>
           `
           : "";
@@ -2980,6 +3264,7 @@
                   <span class="drawer-week-tag">Week ${mod.id}</span>
                 </div>
                 <h2 class="drawer-title">${escapeHtml(mod.title)}</h2>
+                <div class="drawer-assess-row">${assignmentPillsHtml}</div>
               </div>
               <button type="button" id="btn-drawer-close" class="drawer-close" aria-label="Close details">&times;</button>
             </div>
@@ -2998,7 +3283,7 @@
           <div class="drawer-body">
             <p class="drawer-overview">${escapeHtml(mod.overview)}</p>
 
-            ${tlo4Callout}
+            ${ethicsCallout}
 
             <!-- Card 1: Theory & HCI Concepts -->
             <div class="pillar-card pillar-theory">
@@ -3048,9 +3333,9 @@
               }
             </div>
 
-            <!-- Collapsible Objectives, TLOs & Assessment Mapping -->
+            <!-- Collapsible Objectives & TLOs Accordion -->
             <details class="syllabus-accordion">
-              <summary>Learning Objectives, TLOs &amp; Assessments</summary>
+              <summary>Learning Objectives &amp; Topic Learning Outcomes</summary>
               <div class="accordion-body">
                 <div>
                   <div class="conn-subhead" style="margin-top:0.4rem;">Module Learning Objectives</div>
@@ -3059,17 +3344,11 @@
                   </ul>
                 </div>
                 <div>
-                  <div class="conn-subhead">Topic Learning Outcomes (TLOs)</div>
+                  <div class="conn-subhead">Mapped Topic Learning Outcomes (TLOs)</div>
                   <div class="tlo-stack">
                     ${mod.tlos
                       .map((code) => `<div class="tlo-item"><strong>${code}:</strong> ${escapeHtml(TLO_MAP[code])}</div>`)
                       .join("")}
-                  </div>
-                </div>
-                <div>
-                  <div class="conn-subhead">Assessment Mapping</div>
-                  <div class="assess-row">
-                    ${mod.assessments.map((a) => `<span class="assess-pill">${escapeHtml(a)}</span>`).join("")}
                   </div>
                 </div>
               </div>
@@ -3123,7 +3402,7 @@
         dom.btnShowAll.textContent = allOn ? "Hide All Links" : "Show All Links";
         dom.btnShowAll.classList.toggle("is-all-active", allOn);
 
-        dom.tlo4Banner.hidden = !(state.layers.tlo4 && !state.tlo4BannerDismissed);
+        dom.ethicsBanner.hidden = !(state.layers.ethics && !state.ethicsBannerDismissed);
 
         updateVisualStates();
         requestAnimationFrame(drawAllEdges);
@@ -3132,7 +3411,7 @@
       function syncProgressAndStepper() {
         const count = state.explored.size;
         const pct = (count / MODULES.length) * 100;
-        dom.progressCount.textContent = `${count}/${MODULES.length}`;
+        dom.progressCount.textContent = `${count} / ${MODULES.length} explored`;
         dom.progressFill.style.width = `${pct}%`;
 
         const activeWeek = state.selectedId ?? 1;
@@ -3231,8 +3510,8 @@
             const key = chip.dataset.layer;
             const next = !state.layers[key];
             state.layers[key] = next;
-            if (key === "tlo4" && next) {
-              state.tlo4BannerDismissed = false;
+            if (key === "ethics" && next) {
+              state.ethicsBannerDismissed = false;
             }
             closeEdgePopover();
             syncLayerUI();
@@ -3246,7 +3525,7 @@
           Object.keys(state.layers).forEach((k) => {
             state.layers[k] = next;
           });
-          if (next) state.tlo4BannerDismissed = false;
+          if (next) state.ethicsBannerDismissed = false;
           closeEdgePopover();
           syncLayerUI();
         });
@@ -3256,15 +3535,15 @@
           Object.keys(state.layers).forEach((k) => {
             state.layers[k] = false;
           });
-          state.tlo4BannerDismissed = false;
+          state.ethicsBannerDismissed = false;
           closeEdgePopover();
           syncLayerUI();
         });
 
-        // Dismissible TLO4 banner
-        dom.btnDismissTlo4.addEventListener("click", () => {
-          state.tlo4BannerDismissed = true;
-          dom.tlo4Banner.hidden = true;
+        // Dismissible Ethics banner
+        dom.btnDismissEthics.addEventListener("click", () => {
+          state.ethicsBannerDismissed = true;
+          dom.ethicsBanner.hidden = true;
           requestAnimationFrame(drawAllEdges);
         });
 
