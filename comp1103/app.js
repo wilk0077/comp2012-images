@@ -550,4 +550,322 @@ function openEdgePopover(link, clientX, clientY) {
     <p class="popover-route">Week ${src.id}: ${esc(src.title)} &rarr; Week ${dst.id}: ${esc(dst.title)}</p>
     <p class="popover-reason">${esc(link.reason)}</p>
     <div class="popover-actions">
-      <button type="button" class="popover-jump" data-open
+      <button type="button" class="popover-jump" data-open-id="${src.id}">Open Week ${src.id}</button>
+      <button type="button" class="popover-jump" data-open-id="${dst.id}">Open Week ${dst.id}</button>
+    </div>
+  `;
+
+  dom.edgePopover.hidden = false;
+  positionFloating(dom.edgePopover, clientX, clientY);
+  updateNetworkState();
+
+  dom.edgePopover.querySelector(".popover-close")?.addEventListener("click", closeEdgePopover);
+  dom.edgePopover.querySelectorAll("[data-open-id]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = Number(btn.dataset.openId);
+      closeEdgePopover();
+      openModule(targetId);
+    });
+  });
+}
+
+function closeEdgePopover() {
+  state.pinnedEdgeId = null;
+  dom.edgePopover.hidden = true;
+  updateNetworkState();
+}
+
+/* ---------- Slide-Over Detail Drawer ---------- */
+function renderDrawer() {
+  const mod = getModule(state.selectedId);
+  const phase = getPhase(mod.phase);
+  const isExplored = state.explored.has(mod.id);
+  const ethicsNote = ETHICS_NOTES[mod.id];
+
+  const incoming = TYPED_LINKS.filter((l) => l.to === mod.id);
+  const outgoing = TYPED_LINKS.filter((l) => l.from === mod.id);
+
+  const assessHtml = mod.assessments.length
+    ? mod.assessments
+        .map((code) => `<span class="drawer-assess-pill">${esc(ASSIGNMENTS[code])}</span>`)
+        .join("")
+    : `<span class="drawer-assess-pill is-synthesis">Topic Synthesis (Non-Assessed)</span>`;
+
+  const connectionsHtml = [
+    ...incoming.map((l) => {
+      const other = getModule(l.from);
+      return `
+        <button type="button" class="conn-btn type-${l.type}" data-jump-id="${other.id}">
+          <span class="conn-top">
+            <span>&larr; Builds on W${other.id}: ${esc(other.title)}</span>
+            <span class="type-pill type-${l.type}">${esc(LINK_TYPES[l.type].label)}</span>
+          </span>
+          <span class="conn-reason">${esc(l.reason)}</span>
+        </button>
+      `;
+    }),
+    ...outgoing.map((l) => {
+      const other = getModule(l.to);
+      return `
+        <button type="button" class="conn-btn type-${l.type}" data-jump-id="${other.id}">
+          <span class="conn-top">
+            <span>&rarr; Connects to W${other.id}: ${esc(other.title)}</span>
+            <span class="type-pill type-${l.type}">${esc(LINK_TYPES[l.type].label)}</span>
+          </span>
+          <span class="conn-reason">${esc(l.reason)}</span>
+        </button>
+      `;
+    })
+  ].join("");
+
+  dom.drawer.innerHTML = `
+    <div class="drawer-top">
+      <div>
+        <span class="drawer-kicker">${esc(phase.kicker)} · Week ${mod.id}</span>
+        <h2 class="drawer-title">${esc(mod.title)}</h2>
+      </div>
+      <button type="button" id="drawer-close" class="drawer-close" aria-label="Close module details">&times;</button>
+    </div>
+
+    <p class="drawer-overview">${esc(mod.overview)}</p>
+
+    <div class="drawer-meta-row">
+      ${assessHtml}
+      <button type="button" id="drawer-explored" class="explored-toggle ${isExplored ? "is-done" : ""}">
+        ${isExplored ? "&#10003; Explored" : "Mark Explored"}
+      </button>
+    </div>
+
+    <div class="pillar-box pillar-theory">
+      <div class="pillar-kicker">Theory &amp; HCI</div>
+      <h3>${esc(mod.theory.short)}</h3>
+      <p>${esc(mod.theory.detail)}</p>
+    </div>
+
+    <div class="pillar-box pillar-practice">
+      <div class="pillar-kicker">Practical Delivery</div>
+      <h3>${esc(mod.practice.short)}</h3>
+      <p>${esc(mod.practice.detail)}</p>
+    </div>
+
+    <div class="pillar-box pillar-law">
+      <div class="pillar-kicker">Law of UX Spotlight</div>
+      <h3>${esc(mod.law.name)}</h3>
+      <p>${esc(mod.law.summary)}</p>
+      <div class="law-examples">
+        <div class="law-example">
+          <strong>Informs UX Theory</strong>
+          ${esc(mod.law.theoryLink)}
+        </div>
+        <div class="law-example">
+          <strong>Informs Practical Delivery</strong>
+          ${esc(mod.law.practiceLink)}
+        </div>
+      </div>
+    </div>
+
+    ${
+      ethicsNote
+        ? `
+      <div class="pillar-box pillar-ethics">
+        <div class="pillar-kicker">Ethics &amp; Security Thread</div>
+        <p>${esc(ethicsNote)}</p>
+      </div>
+    `
+        : ""
+    }
+
+    <div class="drawer-section">
+      <h3 class="drawer-section-title">Connected Weeks (${incoming.length + outgoing.length})</h3>
+      <div class="conn-list">${connectionsHtml}</div>
+    </div>
+
+    <details class="accordion">
+      <summary>Learning Objectives &amp; Topic Learning Outcomes (TLOs)</summary>
+      <div class="accordion-body">
+        <ul>
+          ${mod.objectives.map((obj) => `<li>${esc(obj)}</li>`).join("")}
+        </ul>
+        ${mod.tlos
+          .map((code) => `<div class="tlo-row"><strong>${code}:</strong> ${esc(TLO_MAP[code])}</div>`)
+          .join("")}
+      </div>
+    </details>
+
+    <div class="drawer-footer-nav">
+      <button type="button" id="drawer-prev" class="step-btn" ${mod.id === 1 ? "disabled" : ""}>&larr; Week ${Math.max(1, mod.id - 1)}</button>
+      <button type="button" id="drawer-next" class="step-btn step-btn-primary" ${mod.id === MODULES.length ? "disabled" : ""}>Week ${Math.min(MODULES.length, mod.id + 1)} &rarr;</button>
+    </div>
+  `;
+
+  dom.drawer.scrollTop = 0;
+
+  dom.drawer.querySelector("#drawer-close")?.addEventListener("click", closeDrawer);
+  dom.drawer.querySelector("#drawer-prev")?.addEventListener("click", () => stepModule(-1, true));
+  dom.drawer.querySelector("#drawer-next")?.addEventListener("click", () => stepModule(1, true));
+  dom.drawer.querySelector("#drawer-explored")?.addEventListener("click", () => toggleExplored(mod.id));
+  dom.drawer.querySelectorAll("[data-jump-id]").forEach((btn) => {
+    btn.addEventListener("click", () => openModule(Number(btn.dataset.jumpId)));
+  });
+}
+
+/* ---------- State Actions ---------- */
+function openModule(id) {
+  closeEdgePopover();
+  state.selectedId = Math.max(1, Math.min(MODULES.length, id));
+  state.explored.add(state.selectedId);
+  saveExplored();
+  state.drawerOpen = true;
+
+  dom.drawerBackdrop.hidden = false;
+  dom.drawer.classList.add("is-open");
+  dom.drawer.setAttribute("aria-hidden", "false");
+
+  renderAll();
+}
+
+function closeDrawer() {
+  state.drawerOpen = false;
+  dom.drawerBackdrop.hidden = true;
+  dom.drawer.classList.remove("is-open");
+  dom.drawer.setAttribute("aria-hidden", "true");
+  updateNetworkState();
+}
+
+function stepModule(delta, keepDrawerOpen = state.drawerOpen) {
+  const next = state.selectedId + delta;
+  if (next < 1 || next > MODULES.length) return;
+  if (keepDrawerOpen) {
+    openModule(next);
+  } else {
+    state.selectedId = next;
+    state.explored.add(next);
+    saveExplored();
+    renderAll();
+  }
+}
+
+function toggleExplored(id) {
+  if (state.explored.has(id)) {
+    state.explored.delete(id);
+  } else {
+    state.explored.add(id);
+  }
+  saveExplored();
+  renderAll();
+}
+
+function toggleFullscreen() {
+  try {
+    if (!document.fullscreenElement) {
+      if (dom.shell.requestFullscreen) {
+        dom.shell.requestFullscreen().catch(() => {
+          dom.shell.classList.toggle("is-expanded-fallback");
+        });
+      } else {
+        dom.shell.classList.toggle("is-expanded-fallback");
+      }
+    } else {
+      document.exitFullscreen();
+    }
+  } catch {
+    dom.shell.classList.toggle("is-expanded-fallback");
+  }
+}
+
+function renderAll() {
+  renderControls();
+  renderColumns();
+  if (state.drawerOpen) {
+    renderDrawer();
+  }
+}
+
+/* ---------- Event Listeners & Init ---------- */
+function init() {
+  // Sliding lens options
+  dom.lensOpts.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.lens = btn.dataset.lens;
+      renderControls();
+      renderColumns();
+    });
+  });
+
+  // Link layer toggles
+  dom.layerChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const layer = chip.dataset.layer;
+      if (state.activeLayers.has(layer)) {
+        state.activeLayers.delete(layer);
+      } else {
+        state.activeLayers.add(layer);
+        if (layer === "ethics") state.ethicsBannerDismissed = false;
+      }
+      renderControls();
+      renderColumns();
+    });
+  });
+
+  dom.btnAllLayers.addEventListener("click", () => {
+    const allKeys = ["handoff", "theory", "spiral", "ethics"];
+    const allOn = allKeys.every((k) => state.activeLayers.has(k));
+    state.activeLayers.clear();
+    if (!allOn) {
+      allKeys.forEach((k) => state.activeLayers.add(k));
+      state.ethicsBannerDismissed = false;
+    }
+    renderControls();
+    renderColumns();
+  });
+
+  dom.btnCloseEthics.addEventListener("click", () => {
+    state.ethicsBannerDismissed = true;
+    dom.ethicsBanner.hidden = true;
+  });
+
+  dom.btnFullscreen.addEventListener("click", toggleFullscreen);
+
+  dom.stepPrev.addEventListener("click", () => stepModule(-1, true));
+  dom.stepNext.addEventListener("click", () => stepModule(1, true));
+  dom.stepIndicator.addEventListener("click", () => openModule(state.selectedId));
+  dom.drawerBackdrop.addEventListener("click", closeDrawer);
+
+  // Dismiss edge popover when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!dom.edgePopover.hidden && !dom.edgePopover.contains(e.target)) {
+      closeEdgePopover();
+    }
+  });
+
+  // Keyboard navigation
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      if (!dom.edgePopover.hidden) closeEdgePopover();
+      else if (state.drawerOpen) closeDrawer();
+    } else if (e.key === "ArrowRight") {
+      stepModule(1, state.drawerOpen);
+    } else if (e.key === "ArrowLeft") {
+      stepModule(-1, state.drawerOpen);
+    }
+  });
+
+  // Keep SVG routes and lens thumb aligned on resize
+  if (typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(() => {
+      drawSvgEdges();
+      syncLensThumb();
+    });
+    ro.observe(dom.mapStage);
+    ro.observe(dom.lensSlider);
+  }
+  window.addEventListener("resize", () => {
+    drawSvgEdges();
+    syncLensThumb();
+  });
+
+  renderAll();
+  requestAnimationFrame(syncLensThumb);
+}
+
+init();
