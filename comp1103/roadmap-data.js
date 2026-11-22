@@ -47,7 +47,7 @@ export const LINK_TYPES = {
 };
 
 export const ETHICS_NOTES = {
-  1: "TLO4 begins here: recognising ethical, legal, and inclusive responsibilities toward diverse users from day one.",
+  1: "Recognising ethical, legal, and inclusive responsibilities toward diverse users from day one.",
   2: "User research demands ethical observation, informed consent, privacy-safe notes, and unbiased questioning (TLO4).",
   3: "Evidence-backed Personas guard against stereotyping and exclusion by grounding design in real user data (TLO4).",
   9: "Back-end PHP and MySQL development requires defensive coding, sanitisation, and protection of stored user data.",
@@ -90,7 +90,7 @@ export const MODULES = [
       "Set up your development environment, including GitHub repositories"
     ],
     tlos: ["TLO1", "TLO4", "TLO5", "TLO6"],
-    assessments: ["A1", "A2"]
+    assessments: ["A1", "A2", "A3"]
   },
   {
     id: 2,
