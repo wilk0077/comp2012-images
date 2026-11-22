@@ -5,13 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>COMP1103 UX Fundamentals — Landscape Concept Map</title>
   <style>
-    /* =========================================================================
-       COMP1103 UX Fundamentals — 3-Column Landscape Node-and-Edge Concept Map
-       Single-file, zero-dependency build for Canvas LMS iframe embedding
-       ========================================================================= */
-
+    
     :root {
-      /* Flinders-Inspired Clean Academic Palette */
       --navy: #232D4B;
       --navy-deep: #182038;
       --navy-soft: #EEF1F8;
@@ -22,7 +17,6 @@
       --sand: #F6EEE1;
       --canvas-bg: #F6EEE1;
 
-      /* Shaded Column Panel Palette */
       --col1-bg: #FCF7E8;
       --col1-border: #E8D7A8;
       --col1-accent: #CB9828;
@@ -33,7 +27,6 @@
       --col3-border: #C5D2EA;
       --col3-accent: #232D4B;
 
-      /* Semantic Link-Layer Colours */
       --backbone-rest: #8A99B2;
       --backbone-active: #232D4B;
       --artefact: #0D7A5F;
@@ -46,14 +39,12 @@
       --ethics-soft: #FEF3C7;
       --ethics-ink: #92400E;
 
-      /* Surfaces, Borders & Typography */
       --surface: #FFFFFF;
       --border: #E0E3EE;
       --border-strong: #C5CCDD;
       --text: #1E2536;
       --text-muted: #5A647B;
 
-      /* Geometry & Motion */
       --radius-sm: 8px;
       --radius-node: 12px;
       --radius-pill: 999px;
@@ -90,9 +81,6 @@
       outline-offset: 2px;
     }
 
-    /* =========================================================================
-       1. APP SHELL & TOP SLIM BAR (~52px)
-       ========================================================================= */
     .app-shell {
       position: relative;
       display: flex;
@@ -104,7 +92,6 @@
       background: var(--canvas-bg);
     }
 
-    /* Iframe-safe fullscreen CSS fallback */
     .app-shell.is-fullscreen-fallback {
       position: fixed;
       inset: 0;
@@ -155,7 +142,6 @@
       text-overflow: ellipsis;
     }
 
-    /* 4-Mode Node Lens Segmented Pill Control */
     .lens-control {
       display: inline-flex;
       align-items: center;
@@ -198,7 +184,6 @@
       color: #074C3A;
     }
 
-    /* Right Progress Counter & Fullscreen Button */
     .top-right {
       display: flex;
       align-items: center;
@@ -259,9 +244,6 @@
       background: rgba(255, 255, 255, 0.22);
     }
 
-    /* =========================================================================
-       2. SECONDARY SLIM LINK-LAYER TOGGLE BAR (~42px)
-       ========================================================================= */
     .layer-bar {
       display: flex;
       flex-wrap: wrap;
@@ -377,9 +359,6 @@
       border-color: var(--navy);
     }
 
-    /* =========================================================================
-       3. DISMISSIBLE INLINE ETHICS & SECURITY (TLO4) BANNER
-       ========================================================================= */
     .tlo4-banner {
       display: flex;
       align-items: center;
@@ -436,9 +415,6 @@
       color: #FFFFFF;
     }
 
-    /* =========================================================================
-       4. MAIN LANDSCAPE CANVAS AREA (SOLID SAND + SHADED 3-COLUMN GRID + SVG)
-       ========================================================================= */
     .canvas-area {
       position: relative;
       flex: 1;
@@ -447,7 +423,6 @@
       background: var(--canvas-bg);
     }
 
-    /* Landscape container: generous outer corridors for collision-free routing */
     .map-wrapper {
       position: relative;
       min-width: 980px;
@@ -456,7 +431,6 @@
       padding: 46px 46px 76px 50px;
     }
 
-    /* Full-coverage SVG layer */
     .edges-svg {
       position: absolute;
       inset: 0;
@@ -467,7 +441,6 @@
       overflow: visible;
     }
 
-    /* Sequential backbone lines */
     .backbone-path {
       fill: none;
       stroke: var(--backbone-rest);
@@ -487,7 +460,6 @@
       opacity: 0.94;
     }
 
-    /* Typed cross-module links */
     .typed-edge {
       fill: none;
       stroke-linecap: round;
@@ -531,7 +503,6 @@
       filter: drop-shadow(0 2px 6px rgba(24, 32, 56, 0.24));
     }
 
-    /* Wide transparent SVG hit target for effortless edge hover & click */
     .edge-hit {
       fill: none;
       stroke: transparent;
@@ -546,7 +517,6 @@
       cursor: default;
     }
 
-    /* Three-Column Landscape CSS Grid */
     .columns-grid {
       position: relative;
       z-index: 2;
@@ -556,7 +526,6 @@
       align-items: start;
     }
 
-    /* Shaded Phase Column Panels */
     .phase-column {
       display: flex;
       flex-direction: column;
@@ -584,7 +553,6 @@
       border-top: 4px solid var(--col3-accent);
     }
 
-    /* Compact Phase Column Header */
     .phase-header {
       display: flex;
       flex-direction: column;
@@ -621,7 +589,6 @@
       line-height: 1.25;
     }
 
-    /* Vertical Node Stacks per Column (tuned so all 5 rows fit 1280x720 landscape) */
     .column-nodes {
       display: flex;
       flex-direction: column;
@@ -631,9 +598,6 @@
     .phase-column[data-phase="2"] .column-nodes { gap: 20px; }
     .phase-column[data-phase="3"] .column-nodes { gap: 24px; }
 
-    /* =========================================================================
-       5. COMPACT MODULE NODE CARDS (~68px-74px TALL)
-       ========================================================================= */
     .week-node {
       position: relative;
       z-index: 4;
@@ -657,7 +621,6 @@
         background-color var(--ease);
     }
 
-    /* Subtle Lens-specific border accent at rest */
     .columns-grid[data-lens="theory"] .week-node   { border-color: #C7D4FA; }
     .columns-grid[data-lens="practice"] .week-node { border-color: #B4E2D3; }
     .columns-grid[data-lens="laws"] .week-node     { border-color: #EED78E; }
@@ -669,7 +632,6 @@
       z-index: 7;
     }
 
-    /* Ethics, Legal & Security Halo & Shield Badge */
     .week-node.is-ethics-active {
       border-color: var(--ethics);
       box-shadow: 0 0 0 3.5px rgba(217, 119, 6, 0.25), var(--shadow-node);
@@ -693,7 +655,6 @@
       display: inline-flex;
     }
 
-    /* Ego-Network & Edge Selection States */
     .week-node.is-dimmed {
       opacity: 0.35;
     }
@@ -853,9 +814,6 @@
     .lens-pill-text.lens-practice { background: var(--artefact-soft); color: #065F46; }
     .lens-pill-text.lens-laws     { background: var(--gold-soft);     color: var(--gold-ink); border: 1px solid #F1DC92; }
 
-    /* =========================================================================
-       6. FLOATING HOVER TOOLTIP & CLICK POPOVER FOR EDGES
-       ========================================================================= */
     .edge-tooltip {
       position: fixed;
       z-index: 70;
@@ -990,9 +948,6 @@
       border-color: var(--navy);
     }
 
-    /* =========================================================================
-       7. FLOATING BOTTOM-RIGHT SELF-PACED STEPPER PILL
-       ========================================================================= */
     .floating-hint {
       position: absolute;
       left: 1.15rem;
@@ -1076,9 +1031,6 @@
       background: var(--navy-soft);
     }
 
-    /* =========================================================================
-       8. SLIDE-OVER RIGHT-HAND DETAIL DRAWER (~410px, NON-REFLOWING)
-       ========================================================================= */
     .drawer-scrim {
       position: absolute;
       inset: 0;
@@ -1255,7 +1207,6 @@
       font-size: 0.76rem;
     }
 
-    /* Three Clean Pillar Cards */
     .pillar-card {
       border-radius: 10px;
       padding: 0.72rem 0.84rem;
@@ -1326,7 +1277,6 @@
       margin-bottom: 0.1rem;
     }
 
-    /* Connected Weeks Section */
     .section-title {
       margin: 0 0 0.42rem;
       font-size: 0.71rem;
@@ -1395,7 +1345,6 @@
       line-height: 1.38;
     }
 
-    /* Collapsible Objectives, TLOs & Assessment Accordion */
     .syllabus-accordion {
       border: 1px solid var(--border-strong);
       border-radius: 10px;
@@ -1489,7 +1438,6 @@
       color: var(--navy);
     }
 
-    /* Compact Header Adjustments on Narrow LMS IFrames (Keep Map Landscape!) */
     @media (max-width: 920px) {
       .top-bar {
         flex-wrap: wrap;
@@ -1519,7 +1467,6 @@
 </head>
 <body>
   <div id="app-shell" class="app-shell">
-    <!-- 1. TOP SLIM BAR (~52px) -->
     <header class="top-bar">
       <div class="brand-group">
         <span class="topic-badge">COMP1103</span>
@@ -1547,7 +1494,6 @@
       </div>
     </header>
 
-    <!-- 2. SECONDARY SLIM LINK-LAYER TOGGLE BAR (~42px) -->
     <section class="layer-bar" aria-label="Toggle cross-module link layers">
       <div class="layer-group" role="group" aria-label="Typed connection layers">
         <span class="layer-label">Link Layers:</span>
@@ -1590,7 +1536,6 @@
       </div>
     </section>
 
-    <!-- 3. DISMISSIBLE INLINE ETHICS, LEGAL & SECURITY BANNER -->
     <div id="ethics-banner" class="tlo4-banner" role="region" aria-label="Ethics, Legal and Security thread summary" hidden>
       <div class="tlo4-banner-left">
         <span class="shield-icon-box" aria-hidden="true">
@@ -1607,7 +1552,6 @@
       <button type="button" id="btn-dismiss-ethics" class="banner-dismiss-btn" aria-label="Dismiss Ethics and Security banner">&times;</button>
     </div>
 
-    <!-- 4. MAIN LANDSCAPE CANVAS AREA (3 SHADED COLUMNS + SVG LAYER) -->
     <main id="canvas-area" class="canvas-area" aria-label="COMP1103 three-column landscape concept map">
       <div id="map-wrapper" class="map-wrapper">
         <svg id="edges-svg" class="edges-svg" aria-hidden="true"></svg>
@@ -1615,7 +1559,6 @@
       </div>
     </main>
 
-    <!-- 5. SUBTLE INTERACTION HINT & FLOATING BOTTOM-RIGHT STEPPER -->
     <div class="floating-hint" aria-hidden="true">
       Hover any week for its connections &middot; Hover or click coloured lines to inspect
     </div>
@@ -1626,11 +1569,9 @@
       <button type="button" id="btn-next" class="step-btn is-primary">Next &rarr;</button>
     </nav>
 
-    <!-- 6. EDGE HOVER TOOLTIP & CLICK POPOVER -->
     <div id="edge-tooltip" class="edge-tooltip" role="tooltip" aria-hidden="true"></div>
     <div id="edge-popover" class="edge-popover" role="dialog" aria-label="Linkage details" hidden></div>
 
-    <!-- 7. SLIDE-OVER DETAIL DRAWER -->
     <div id="drawer-scrim" class="drawer-scrim" aria-hidden="true"></div>
     <aside id="detail-drawer" class="detail-drawer" aria-label="Selected module details" aria-hidden="true"></aside>
   </div>
@@ -1639,9 +1580,6 @@
     (() => {
       "use strict";
 
-      /* =======================================================================
-         1. COMPLETE CURRICULUM DATA (COMP1103 UX FUNDAMENTALS — WEEKS 1–12)
-         ======================================================================= */
       const ASSESSMENTS = {
         A1: { short: "A1", full: "A1: Paper Prototypes and Design Documents" },
         A2: { short: "A2", full: "A2: Web Build Prototype" },
@@ -1702,12 +1640,12 @@
       const ETHICS_WEEKS = new Set([1, 2, 3, 9, 11, 12]);
 
       const ETHICS_NOTES = {
-        1: "TLO4 Anchor: Establishes ethical user inclusion and transparent professional documentation from Week 1.",
-        2: "TLO4 Anchor: Applies research ethics, informed consent, and responsible handling of participant observations and survey data.",
-        3: "TLO4 Anchor: Guards against stereotyping and designer bias by grounding Personas in authentic user evidence.",
+        1: "Establishes ethical user inclusion and transparent professional documentation from Week 1.",
+        2: "Applies research ethics, informed consent, and responsible handling of participant observations and survey data.",
+        3: "Guards against stereotyping and designer bias by grounding Personas in authentic user evidence.",
         9: "Database Security & Protection: Translates ethical responsibility into practical PHP input sanitisation and MySQL data security.",
         11: "Testing Ethics: Applies ethical participant recruitment, informed consent, psychological safety, and secure session data handling.",
-        12: "TLO4 Anchor: Critically examines ethical, legal, privacy, and accountability questions as AI reshapes UX practice."
+        12: "Critically examines ethical, legal, privacy, and accountability questions as AI reshapes UX practice."
       };
 
       const MODULES = [
@@ -1750,7 +1688,7 @@
             "Set up your development environment, including GitHub repositories"
           ],
           tlos: ["TLO1", "TLO4", "TLO5", "TLO6"],
-          assessments: ["A1", "A2"]
+          assessments: ["A1", "A2", "A3"]
         },
         {
           id: 2,
@@ -2196,16 +2134,13 @@
         }
       ];
 
-      /* Sequential weekly backbone (11 edges, always visible at rest) */
       const BACKBONE = [
         [1, 2], [2, 3], [3, 4], [4, 5],
         [5, 6], [6, 7], [7, 8], [8, 9],
         [9, 10], [10, 11], [11, 12]
       ];
 
-      /* Comprehensive, Content-Verified Cross-Module Linkages (28 typed edges) */
       const TYPED_LINKS = [
-        // --- ARTEFACT HANDOFFS (10 edges, solid Teal #0D7A5F) ---
         {
           id: "art-1-6",
           from: 1,
@@ -2277,7 +2212,6 @@
           reason: "The finalised full-stack web prototype (W9) is placed directly in front of recruited participants for live usability testing in Week 11."
         },
 
-        // --- THEORY -> PRACTICE BRIDGES (11 edges, dashed Deep Gold #CB9828) ---
         {
           id: "th-1-4",
           from: 1,
@@ -2356,7 +2290,6 @@
           reason: "PHP/MySQL server logic delivers usefulness (effectiveness), while database/server latency directly impacts Week 10's Doherty Threshold."
         },
 
-        // --- RESEARCH & EVALUATION SPIRAL (7 edges, dotted Indigo #3B5CCC) ---
         {
           id: "sp-1-10",
           from: 1,
@@ -2408,9 +2341,6 @@
         }
       ];
 
-      /* =======================================================================
-         2. STATE MANAGEMENT & LMS-SAFE STORAGE
-         ======================================================================= */
       const STORAGE_KEY = "comp1103_landscape_map_explored_v2";
 
       function loadExplored() {
@@ -2428,7 +2358,7 @@
         try {
           window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.explored]));
         } catch {
-          // Gracefully ignore when Canvas LMS iframe restricts storage
+      
         }
       }
 
@@ -2449,9 +2379,6 @@
         explored: loadExplored()
       };
 
-      /* =======================================================================
-         3. DOM REFERENCES & UTILITIES
-         ======================================================================= */
       const dom = {
         shell: document.getElementById("app-shell"),
         lensBtns: document.querySelectorAll(".lens-btn"),
@@ -2488,9 +2415,6 @@
           .replace(/"/g, "&quot;");
       }
 
-      /* =======================================================================
-         4. RENDER 3-COLUMN SHADED LANDSCAPE NODE GRID
-         ======================================================================= */
       function renderColumns() {
         dom.columnsGrid.dataset.lens = state.lens;
 
@@ -2549,7 +2473,6 @@
           `;
         }).join("");
 
-        // Bind hover (ego-network) and click (slide-over drawer) handlers
         dom.columnsGrid.querySelectorAll(".week-node").forEach((node) => {
           const id = Number(node.dataset.nodeId);
 
@@ -2576,9 +2499,6 @@
         });
       }
 
-      /* =======================================================================
-         5. SMART PORT-STAGGERED, COLLISION-AVOIDANT LANDSCAPE SVG ROUTING
-         ======================================================================= */
       function buildRoundedPath(points, radius = 15) {
         if (!points || points.length < 2) return "";
         if (points.length === 2) {
@@ -2615,10 +2535,6 @@
         return d;
       }
 
-      /**
-       * Allocates vertically staggered anchor Y coordinates along a node's
-       * left or right side so shared edges fan cleanly without overlapping.
-       */
       function computePortY(node, index, total) {
         if (total <= 1) return node.cy;
         const pad = 10;
@@ -2633,7 +2549,6 @@
         const wrapRect = dom.mapWrapper.getBoundingClientRect();
         if (!wrapRect.width || !wrapRect.height) return;
 
-        // Collect node rectangles relative to mapWrapper
         const nodes = new Map();
         dom.columnsGrid.querySelectorAll(".week-node").forEach((el) => {
           const id = Number(el.dataset.nodeId);
@@ -2653,7 +2568,6 @@
           });
         });
 
-        // Collect shaded column panel bounds for guaranteed outer-corridor clearance
         const cols = new Map();
         dom.columnsGrid.querySelectorAll(".phase-column").forEach((el) => {
           const p = Number(el.dataset.phase);
@@ -2671,7 +2585,6 @@
         const c3 = cols.get(3);
         if (!c1 || !c2 || !c3) return;
 
-        // Inter-column gutters & outer perimeter corridors
         const g12Left = c1.right;
         const g12Right = c2.left;
         const g12W = g12Right - g12Left;
@@ -2693,7 +2606,6 @@
         const outerLeft2X = Math.max(8, c1.left - 34);      // 2 -> 5
         const outerRightX = c3.right + 20;                  // 1 -> 12 right descent
 
-        // Classify edges and gather right-exit / left-entry port groups for smart staggering
         const rightGroups = new Map();
         const leftGroups = new Map();
         const typeOrder = { artefact: 0, theory: 1, spiral: 2 };
@@ -2772,7 +2684,6 @@
           </defs>
         `;
 
-        // 1) Sequential Backbone Paths (11 edges: vertical intra-column + S-elbows 5->6 and 9->10)
         const backboneHtml = BACKBONE.map(([fromId, toId]) => {
           const a = nodes.get(fromId);
           const b = nodes.get(toId);
@@ -2797,7 +2708,6 @@
           return `<path class="backbone-path" data-b-from="${fromId}" data-b-to="${toId}" d="${d}" marker-end="url(#arr-backbone)" />`;
         }).join("");
 
-        // 2) Typed Cross-Module Edges (28 edges) + Transparent 14px Hit Targets
         const visibleEdges = [];
         const hitEdges = [];
 
@@ -2805,11 +2715,9 @@
           let d = "";
 
           if (kind === "intra-adj") {
-            // Parallel offset from center backbone so both lines stay distinct and hoverable
             const x = a.cx + 22;
             d = `M ${x} ${a.bottom + 1} L ${x} ${b.top - 5}`;
           } else if (kind === "intra-skip") {
-            // Outer-left Col 1 bypass arcs staggered by span depth (1->4 inner, 2->5 outer)
             const laneX = link.id === "th-1-4" ? outerLeft1X : outerLeft2X;
             d = buildRoundedPath(
               [
@@ -2821,7 +2729,6 @@
               16
             );
           } else if (link.id === "sp-1-10") {
-            // Upper outer corridor above Column 2: W1.right -> Col 1-2 gutter -> Top Lane 1 -> Col 2-3 gutter -> W10.left
             const sy = rightPortY.get(link.id) ?? a.cy;
             const ty = leftPortY.get(link.id) ?? b.cy;
             const gx1 = g12Left + g12W * 0.28;
@@ -2838,7 +2745,6 @@
               14
             );
           } else if (link.id === "sp-1-12") {
-            // Outer perimeter arc above Columns 2 & 3 and down outer right gutter to W12.right
             const sy = rightPortY.get(link.id) ?? a.cy;
             const gx1 = g12Left + g12W * 0.14;
             d = buildRoundedPath(
@@ -2853,7 +2759,6 @@
               16
             );
           } else if (link.id === "sp-5-11") {
-            // Bottom outer corridor Lane 1 below Column 2: W5.right -> Col 1-2 gutter -> Bot Lane 1 -> Col 2-3 gutter -> W11.left
             const sy = rightPortY.get(link.id) ?? a.cy;
             const ty = leftPortY.get(link.id) ?? b.cy;
             const gx1 = g12Left + g12W * 0.72;
@@ -2870,7 +2775,6 @@
               14
             );
           } else if (link.id === "sp-2-11") {
-            // Bottom outer corridor Lane 2 below Column 2: W2.right -> Col 1-2 gutter -> Bot Lane 2 -> Col 2-3 gutter -> W11.left
             const sy = rightPortY.get(link.id) ?? a.cy;
             const ty = leftPortY.get(link.id) ?? b.cy;
             const gx1 = g12Left + g12W * 0.24;
@@ -2887,13 +2791,11 @@
               14
             );
           } else {
-            // Adjacent cross-column links (Col 1 -> Col 2, Col 2 -> Col 3): staggered cubic Bezier across gutter
             const x1 = a.right + 1;
             const y1 = rightPortY.get(link.id) ?? a.cy;
             const x2 = b.left - 5;
             const y2 = leftPortY.get(link.id) ?? b.cy;
             const gapX = x2 - x1;
-            // Subtle curve separation for dual-typed pairs sharing endpoints (e.g., 1->6, 9->10)
             const tensionBias = link.type === "artefact" ? 0.42 : link.type === "theory" ? 0.54 : 0.48;
             const c1x = x1 + gapX * tensionBias;
             const c2x = x2 - gapX * (1 - tensionBias);
@@ -2912,7 +2814,6 @@
         dom.edgesSvg.setAttribute("viewBox", `0 0 ${wrapRect.width} ${wrapRect.height}`);
         dom.edgesSvg.innerHTML = `${defs}<g class="svg-backbone">${backboneHtml}</g><g class="svg-typed">${visibleEdges.join("")}</g><g class="svg-hits">${hitEdges.join("")}</g>`;
 
-        // Bind hover tooltip and click popover to interactive hit paths
         dom.edgesSvg.querySelectorAll(".edge-hit").forEach((hit) => {
           const edgeId = hit.dataset.hitId;
 
@@ -2944,16 +2845,12 @@
         updateVisualStates();
       }
 
-      /* =======================================================================
-         6. COORDINATED VISUAL STATES (LAYERS, EGO-NETWORK, EDGE HOVER/PIN)
-         ======================================================================= */
       function updateVisualStates() {
         const egoId = state.hoveredNodeId ?? (state.drawerOpen ? state.selectedId : null);
         const activeEdgeId = state.hoveredEdgeId ?? state.pinnedEdgeId;
         const activeEdge = activeEdgeId ? getLink(activeEdgeId) : null;
         const anyLinkLayerOn = state.layers.artefact || state.layers.theory || state.layers.spiral;
 
-        // Collect all peer nodes connected to egoId (via typed links + sequential neighbours)
         const egoPeers = new Set();
         if (egoId !== null) {
           TYPED_LINKS.forEach((l) => {
@@ -2966,7 +2863,6 @@
           });
         }
 
-        // 1) Update typed edges & hit targets
         dom.edgesSvg.querySelectorAll(".typed-edge").forEach((path) => {
           const id = path.dataset.edgeId;
           const from = Number(path.dataset.from);
@@ -2996,7 +2892,6 @@
           }
         });
 
-        // 2) Update sequential backbone paths
         dom.edgesSvg.querySelectorAll(".backbone-path").forEach((bp) => {
           const u = Number(bp.dataset.bFrom);
           const v = Number(bp.dataset.bTo);
@@ -3022,7 +2917,6 @@
           }
         });
 
-        // 3) Update compact week node visual states
         dom.columnsGrid.querySelectorAll(".week-node").forEach((node) => {
           const id = Number(node.dataset.nodeId);
           const isSelected = state.drawerOpen && state.selectedId === id;
@@ -3053,9 +2947,6 @@
         });
       }
 
-      /* =======================================================================
-         7. EDGE HOVER TOOLTIP & CLICK POPOVER
-         ======================================================================= */
       function showEdgeTooltip(edgeId, clientX, clientY) {
         if (state.pinnedEdgeId === edgeId) return;
         const link = getLink(edgeId);
@@ -3160,27 +3051,21 @@
         updateVisualStates();
       }
 
-      /* =======================================================================
-         8. SLIDE-OVER DETAIL DRAWER
-         ======================================================================= */
       function renderDrawer() {
         if (!state.selectedId) return;
         const mod = getModule(state.selectedId);
         const phase = getPhase(mod.phase);
         const isExplored = state.explored.has(mod.id);
 
-        // Build exact Assignment pill(s) or Non-Assessed Topic Synthesis label
         const assignmentPillsHtml = mod.assessments.length
           ? mod.assessments
               .map((code) => `<span class="assess-pill">${escapeHtml(ASSESSMENTS[code].full)}</span>`)
               .join("")
           : `<span class="assess-pill is-synthesis">Topic Synthesis (Non-Assessed)</span>`;
 
-        // Gather typed upstream/downstream links
         const upstream = TYPED_LINKS.filter((l) => l.to === mod.id);
         const downstream = TYPED_LINKS.filter((l) => l.from === mod.id);
 
-        // Include sequential neighbour only when not already represented by a typed edge
         const hasPrevTyped = upstream.some((l) => l.from === mod.id - 1);
         const hasNextTyped = downstream.some((l) => l.to === mod.id + 1);
 
@@ -3285,21 +3170,18 @@
 
             ${ethicsCallout}
 
-            <!-- Card 1: Theory & HCI Concepts -->
             <div class="pillar-card pillar-theory">
               <div class="pillar-kicker">Theory &amp; HCI Concepts</div>
               <h3 class="pillar-heading">${escapeHtml(mod.theory.heading)}</h3>
               <p class="pillar-desc">${escapeHtml(mod.theory.detail)}</p>
             </div>
 
-            <!-- Card 2: Practical Delivery & Outputs -->
             <div class="pillar-card pillar-practice">
               <div class="pillar-kicker">Practical Delivery &amp; Outputs</div>
               <h3 class="pillar-heading">${escapeHtml(mod.practice.heading)}</h3>
               <p class="pillar-desc">${escapeHtml(mod.practice.detail)}</p>
             </div>
 
-            <!-- Card 3: Law of UX Spotlight -->
             <div class="pillar-card pillar-law">
               <div class="pillar-kicker">Law of UX Spotlight</div>
               <h3 class="pillar-heading">${escapeHtml(mod.law.name)}</h3>
@@ -3316,7 +3198,6 @@
               </div>
             </div>
 
-            <!-- Connected Weeks -->
             <div>
               <h3 class="section-title">Connected Weeks</h3>
               ${
@@ -3333,7 +3214,6 @@
               }
             </div>
 
-            <!-- Collapsible Objectives & TLOs Accordion -->
             <details class="syllabus-accordion">
               <summary>Learning Objectives &amp; Topic Learning Outcomes</summary>
               <div class="accordion-body">
@@ -3366,9 +3246,6 @@
         });
       }
 
-      /* =======================================================================
-         9. UI SYNCHRONISATION & ACTIONS
-         ======================================================================= */
       function syncLensUI() {
         dom.columnsGrid.dataset.lens = state.lens;
         dom.lensBtns.forEach((btn) => {
@@ -3492,11 +3369,7 @@
         }
       }
 
-      /* =======================================================================
-         10. EVENT BINDINGS & INITIALISATION
-         ======================================================================= */
       function init() {
-        // 4-mode Node Lens switcher
         dom.lensBtns.forEach((btn) => {
           btn.addEventListener("click", () => {
             state.lens = btn.dataset.lens;
@@ -3504,7 +3377,6 @@
           });
         });
 
-        // Link-Layer Toggle chips
         dom.layerChips.forEach((chip) => {
           chip.addEventListener("click", () => {
             const key = chip.dataset.layer;
@@ -3518,7 +3390,6 @@
           });
         });
 
-        // Show All / Hide All Links
         dom.btnShowAll.addEventListener("click", () => {
           const allOn = Object.values(state.layers).every(Boolean);
           const next = !allOn;
@@ -3530,7 +3401,6 @@
           syncLayerUI();
         });
 
-        // Reset link layers to calm resting backbone
         dom.btnReset.addEventListener("click", () => {
           Object.keys(state.layers).forEach((k) => {
             state.layers[k] = false;
@@ -3540,19 +3410,16 @@
           syncLayerUI();
         });
 
-        // Dismissible Ethics banner
         dom.btnDismissEthics.addEventListener("click", () => {
           state.ethicsBannerDismissed = true;
           dom.ethicsBanner.hidden = true;
           requestAnimationFrame(drawAllEdges);
         });
 
-        // Bottom-right stepper pill
         dom.btnPrev.addEventListener("click", () => stepWeek(-1));
         dom.btnNext.addEventListener("click", () => stepWeek(1));
         dom.btnStepStatus.addEventListener("click", () => openModule(state.selectedId ?? 1));
 
-        // Dismiss drawer / edge popover on empty canvas or scrim click
         dom.drawerScrim.addEventListener("click", closeDrawer);
         dom.canvasArea.addEventListener("click", (e) => {
           if (!e.target.closest(".edge-popover") && !e.target.closest(".edge-hit")) {
@@ -3563,10 +3430,8 @@
           }
         });
 
-        // Fullscreen toggle
         dom.btnFullscreen.addEventListener("click", toggleFullscreen);
 
-        // Keyboard shortcuts: Left / Right arrows & Escape
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape") {
             if (!dom.edgePopover.hidden) {
@@ -3583,7 +3448,6 @@
           }
         });
 
-        // Keep SVG connectors synced on container resize, window resize, and fullscreen changes
         if (typeof ResizeObserver !== "undefined") {
           const ro = new ResizeObserver(() => drawAllEdges());
           ro.observe(dom.mapWrapper);
