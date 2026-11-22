@@ -384,4 +384,142 @@ export const MODULES = [
     overview:
       "Critically evaluates your working system by distinguishing usefulness (accomplishing the right goal) from usability (doing so easily and efficiently), reinforced by affordances, metaphors, and the Doherty Threshold.",
     theory: {
-      short: "Usefulness vs Usability · Affordance & Meta
+      short: "Usefulness vs Usability · Affordance & Metaphors",
+        detail:
+        "Separates system effectiveness (usefulness) from interaction efficiency (usability), analysing how visual affordances and familiar metaphors make interactive capabilities obvious."
+    },
+    practice: {
+      short: "System Usability & Responsiveness Critique",
+      detail:
+        "Critique existing interactive systems and your own prototype by auditing utility vs. friction, checking visual signifiers, and diagnosing latency bottlenecks."
+    },
+    law: {
+      name: "Doherty Threshold",
+      summary:
+        "Productivity soars when a computer and its users interact at a pace (< 400ms) that ensures neither waits on the other.",
+      theoryLink:
+        "Connects system latency directly to the Execution/Evaluation Cycle: sluggish responses break user flow and erode trust even in feature-complete systems.",
+      practiceLink:
+        "Guides practical responsiveness checks—optimising feedback speed, adding clear loading cues for PHP/MySQL queries, and eliminating extraneous interaction steps."
+    },
+    objectives: [
+      "Understand the importance of usefulness and usability in the design of interactive systems",
+      "Critique the separate components of usefulness and usability within an existing interactive system",
+      "Analyse how affordance and metaphors support and reinforce usability of systems",
+      "Discuss the value of the Doherty Threshold and how delay in processing can be a detriment to the user experience"
+    ],
+    tlos: ["TLO1", "TLO3", "TLO5", "TLO6"],
+    assessments: ["A3"]
+  },
+  {
+    id: 11,
+    phase: 3,
+    title: "Usability Evaluation",
+    journeyCue: "Experimental protocol, live testing & recommendation report",
+    overview:
+      "Puts your built website in front of real participants. You will design a formal usability evaluation regime, prepare data-capture apparatus, execute testing sessions, and write an evidence-based recommendation report.",
+    theory: {
+      short: "Empirical Usability Experiment Design",
+      detail:
+        "Completes the user-centred design cycle through structured experimental protocols, reliable observation apparatus, ethical participant testing, and objective analysis."
+    },
+    practice: {
+      short: "Participant Testing & Recommendation Report (A3)",
+      detail:
+        "Design your test script and apparatus, recruit and run participants on your live website, analyse observed bottlenecks, and deliver the Assessment 3 recommendation report."
+    },
+    law: {
+      name: "All 10 Laws in Action (Empirical Synthesis)",
+      summary:
+        "Rather than introducing a new law, live usability testing puts all 10 Laws of UX to an empirical proof with real users.",
+      theoryLink:
+        "Shows why user-centred design pairs theory with empirical testing—principles predict behaviour, while live experiments expose where real humans diverge.",
+      practiceLink:
+        "Strengthens your Assessment 3 report by diagnosing observed failures through UX laws (e.g., missed targets via Fitts' Law, hesitation via Hick's Law, or lag via Doherty Threshold)."
+    },
+    objectives: [
+      "Design an experiment process to test the usability of the existing website",
+      "Recruit participants and execute a usability evaluation",
+      "Consider the results collected and draft a recommendation report"
+    ],
+    tlos: ["TLO1", "TLO3", "TLO5", "TLO6"],
+    assessments: ["A3"]
+  },
+  {
+    id: 12,
+    phase: 3,
+    title: "Future of UX",
+    journeyCue: "UX industry careers, AI workflows & emerging tools",
+    overview:
+      "Zooms out to examine UX's evolving place in the broader computing industry—exploring specialist career roles, emerging tools, and how Artificial Intelligence (AI) is transforming modern UX practice.",
+    theory: {
+      short: "UX Industry Pathways, AI & Ethical Futures",
+      detail:
+        "Explores how UX roles operate across software engineering organisations and critically examines emerging AI capabilities alongside ethical, legal, and human-centred responsibilities."
+    },
+    practice: {
+      short: "AI-in-UX Demonstration & Career Mapping",
+      detail:
+        "Demonstrate practical uses of AI within UX workflows, evaluate emerging design/research tools, and map your semester skills to real industry positions."
+    },
+    law: {
+      name: "Timeless Human Factors (Synthesis)",
+      summary:
+        "Tools, frameworks, and AI models change rapidly, but human perception, memory, attention, and decision-making remain anchored by the Laws of UX.",
+      theoryLink:
+        "Reinforces professional accountability (TLO4): UX practitioners must critically govern AI outputs for accessibility, bias, privacy, and genuine usability.",
+      practiceLink:
+        "Equips you to audit AI-generated interfaces using every law from Weeks 1–10—catching polished outputs that trigger the Aesthetic-Usability trap or break Hick's and Fitts' Laws."
+    },
+    objectives: [
+      "Identify the various industry positions that exist for a UX professional",
+      "Demonstrate how AI can be utilised within the discipline",
+      "Observe the new and emerging tools that enhance the capabilities of UX professionals"
+    ],
+    tlos: ["TLO1", "TLO4"],
+    assessments: []
+  }
+];
+
+/* Resting weekly sequential backbone */
+export const BACKBONE_LINKS = Array.from({ length: 11 }, (_, i) => ({
+  from: i + 1,
+  to: i + 2
+}));
+
+/* 28 content-verified typed cross-module linkages (10 handoff, 11 theory, 7 spiral) */
+export const TYPED_LINKS = [
+  // Artefact Handoffs (10)
+  { id: "h-1-2", from: 1, to: 2, type: "handoff", reason: "Markdown docs and GitHub workflow (W1) house your user research notes and PACT analysis (W2)." },
+  { id: "h-1-6", from: 1, to: 6, type: "handoff", reason: "The GitHub repository and dev environment set up in W1 directly host your HTML/CSS/JS/PHP prototype starting in W6." },
+  { id: "h-2-3", from: 2, to: 3, type: "handoff", reason: "Raw survey/interview notes and PACT findings (W2) are synthesised directly into target Persona posters (W3)." },
+  { id: "h-3-4", from: 3, to: 4, type: "handoff", reason: "Persona goals and pain points (W3) guide every wireframe, storyboard, sitemap, and user flow (W4)." },
+  { id: "h-4-5", from: 4, to: 5, type: "handoff", reason: "Paper wireframes, sitemaps, and user flows (W4) become the test artefacts for KLM, card sorting, and heuristic audits (W5)." },
+  { id: "h-4-6", from: 4, to: 6, type: "handoff", reason: "Your validated sitemap and annotated wireframes (W4) translate directly into interconnected semantic HTML pages (W6)." },
+  { id: "h-6-7", from: 6, to: 7, type: "handoff", reason: "Clean semantic HTML structure (W6) provides the exact DOM elements targeted by external CSS stylesheets (W7)." },
+  { id: "h-7-8", from: 7, to: 8, type: "handoff", reason: "Styled UI components and CSS classes (W7) are updated dynamically through JavaScript and the DOM (W8)." },
+  { id: "h-8-9", from: 8, to: 9, type: "handoff", reason: "Client-side JavaScript forms and interactions (W8) connect to PHP scripts and MySQL tables for persistent data (W9)." },
+  { id: "h-9-11", from: 9, to: 11, type: "handoff", reason: "Your completed full-stack dynamic website (W9) becomes the live test system evaluated by participants in W11." },
+
+  // Theory -> Practice Bridges (11)
+  { id: "t-1-4", from: 1, to: 4, type: "theory", reason: "Jakob's Law conventions (W1) inform familiar navigation and page structures in your paper wireframes and sitemaps (W4)." },
+  { id: "t-1-10", from: 1, to: 10, type: "theory", reason: "Norman's Execution/Evaluation Cycle (W1) underpins how we critique affordances, metaphors, and system feedback in W10." },
+  { id: "t-2-5", from: 2, to: 5, type: "theory", reason: "Miller's Law chunking (W2) is checked empirically through card sorting and preference testing on paper designs (W5)." },
+  { id: "t-2-6", from: 2, to: 6, type: "theory", reason: "PACT insights and Miller's Law chunking (W2) govern how content is grouped into clear semantic HTML sections (W6)." },
+  { id: "t-3-7", from: 3, to: 7, type: "theory", reason: "Hick's Law choice simplification (W3) drives CSS visual hierarchy so target users spot primary actions quickly (W7)." },
+  { id: "t-3-8", from: 3, to: 8, type: "theory", reason: "Hick's Law focus (W3) pairs with the Von Restorff Effect (W8) to isolate critical interactive states via JavaScript." },
+  { id: "t-4-9", from: 4, to: 9, type: "theory", reason: "Postel's Law—handling varied user input gracefully (W4)—pairs with Tesler's Law and PHP/MySQL input processing (W9)." },
+  { id: "t-5-6", from: 5, to: 6, type: "theory", reason: "Heuristic evaluation (W5) connects to Shneiderman's Golden Rules and the Aesthetic-Usability Effect (W6) when testing bare HTML." },
+  { id: "t-5-7", from: 5, to: 7, type: "theory", reason: "Predictive GOMS/KLM pointing times (W5) translate into physical CSS target sizes and spacing via Fitts' Law (W7)." },
+  { id: "t-8-10", from: 8, to: 10, type: "theory", reason: "Client-side DOM responsiveness (W8) directly affects the Doherty Threshold (< 400ms) and perceived usability (W10)." },
+  { id: "t-9-10", from: 9, to: 10, type: "theory", reason: "Server-side PHP/MySQL efficiency and Tesler's Law complexity absorption (W9) shape live usefulness, usability, and latency (W10)." },
+
+  // Research & Evaluation Spiral (7)
+  { id: "s-1-12", from: 1, to: 12, type: "spiral", reason: "Week 1's multidisciplinary UX overview expands into specialist UX careers, emerging tools, and AI-driven practice (W12)." },
+  { id: "s-2-11", from: 2, to: 11, type: "spiral", reason: "Early user observation and qualitative synthesis skills (W2) return at experimental rigour during formal usability testing (W11)." },
+  { id: "s-5-10", from: 5, to: 10, type: "spiral", reason: "Pre-code predictive analysis and Peak-End psychology (W5) evolve into full usefulness vs. usability system critiques (W10)." },
+  { id: "s-5-11", from: 5, to: 11, type: "spiral", reason: "Early paper-prototype testing techniques (W5) scale up into live participant usability experiments and recommendation reports (W11)." },
+  { id: "s-6-10", from: 6, to: 10, type: "spiral", reason: "Shneiderman's Golden Rules (W6) act as a diagnostic lens when evaluating affordances, metaphors, and usability (W10)." },
+  { id: "s-10-11", from: 10, to: 11, type: "spiral", reason: "Usefulness, usability, and Doherty Threshold criteria (W10) define the metrics and tasks tested in your usability experiment (W11)." },
+  { id: "s-11-12", from: 11, to: 12, type: "spiral", reason: "Completing the full research → design → build → test lifecycle (W11) prepares you to evaluate emerging AI UX workflows (W12)." }
+];
