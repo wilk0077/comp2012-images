@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMP1103 UX Fundamentals — Interactive Concept Map</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app-shell" class="app-shell">
+    <!-- Slim Floating Control Bar (No Top Navy Header) -->
+    <div id="control-bar" class="control-bar" role="toolbar" aria-label="Concept map controls">
+      <!-- Sliding Lens Selector -->
+      <div class="control-group">
+        <span class="control-label">Lens</span>
+        <div id="lens-slider" class="lens-slider" role="radiogroup" aria-label="Node display lens">
+          <div id="lens-thumb" class="lens-thumb" aria-hidden="true"></div>
+          <button type="button" class="lens-opt is-active" data-lens="journey" role="radio" aria-checked="true">Journey</button>
+          <button type="button" class="lens-opt" data-lens="theory" role="radio" aria-checked="false">Theory</button>
+          <button type="button" class="lens-opt" data-lens="practice" role="radio" aria-checked="false">Practice</button>
+          <button type="button" class="lens-opt" data-lens="law" role="radio" aria-checked="false">Laws of UX</button>
+        </div>
+      </div>
+
+      <!-- Typed Link-Layer Toggles -->
+      <div class="control-group layer-group" role="group" aria-label="Cross-module link layers">
+        <span class="control-label">Connections</span>
+        <button type="button" class="layer-chip chip-handoff" data-layer="handoff" aria-pressed="false">
+          <span class="swatch swatch-handoff" aria-hidden="true"></span>Artefact Handoffs
+        </button>
+        <button type="button" class="layer-chip chip-theory" data-layer="theory" aria-pressed="false">
+          <span class="swatch swatch-theory" aria-hidden="true"></span>Theory &rarr; Practice
+        </button>
+        <button type="button" class="layer-chip chip-spiral" data-layer="spiral" aria-pressed="false">
+          <span class="swatch swatch-spiral" aria-hidden="true"></span>Research &amp; Eval Spiral
+        </button>
+        <button type="button" class="layer-chip chip-ethics" data-layer="ethics" aria-pressed="false">
+          <span class="swatch swatch-ethics" aria-hidden="true"></span>Ethics &amp; Security
+        </button>
+        <button type="button" id="btn-all-layers" class="text-action-btn" title="Show or hide all link layers">Show All</button>
+      </div>
+
+      <!-- Compact Utilities -->
+      <div class="control-group util-group">
+        <div class="progress-badge" title="Modules explored this session">
+          <span id="progress-text">1 / 12</span>
+          <span class="progress-bar" aria-hidden="true"><span id="progress-fill"></span></span>
+        </div>
+        <button type="button" id="btn-fullscreen" class="icon-btn" title="Toggle fullscreen" aria-label="Toggle fullscreen">
+          <span aria-hidden="true">&#x26F6;</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dismissible Ethics & Security Inline Banner -->
+    <div id="ethics-banner" class="ethics-banner" hidden>
+      <div class="ethics-banner-text">
+        <strong>Ethics, Privacy &amp; Security Thread (TLO4 &amp; Practice):</strong>
+        Highlighted nodes show where professional ethics, user consent, data protection, and responsible AI weave across Weeks 1, 2, 3, 9, 11, and 12.
+      </div>
+      <button type="button" id="btn-close-ethics" class="ethics-close" aria-label="Dismiss notice">&times;</button>
+    </div>
+
+    <!-- Three-Column Landscape Node-Edge Canvas -->
+    <main id="map-viewport" class="map-viewport" aria-label="COMP1103 three-column landscape concept map">
+      <div id="map-stage" class="map-stage">
+        <svg id="map-svg" class="map-svg" aria-hidden="true"></svg>
+        <div id="columns-grid" class="columns-grid"></div>
+      </div>
+    </main>
+
+    <!-- Edge Hover Tooltip -->
+    <div id="edge-tooltip" class="edge-tooltip" role="tooltip" hidden></div>
+
+    <!-- Edge Click Popover -->
+    <div id="edge-popover" class="edge-popover" role="dialog" aria-label="Connection details" hidden></div>
+
+    <!-- Floating Bottom-Right Stepper -->
+    <nav class="floating-stepper" aria-label="Step through weeks">
+      <button type="button" id="step-prev" class="step-btn" aria-label="Previous week">&larr; Prev</button>
+      <button type="button" id="step-indicator" class="step-indicator" title="Open current week details">Week 1 / 12</button>
+      <button type="button" id="step-next" class="step-btn step-btn-primary" aria-label="Next week">Next &rarr;</button>
+    </nav>
+
+    <!-- Non-Reflowing Slide-Over Detail Drawer -->
+    <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+    <aside id="detail-drawer" class="detail-drawer" aria-label="Module details" aria-hidden="true"></aside>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
