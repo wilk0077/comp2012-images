@@ -983,4 +983,106 @@ button {
 
 /* Drawer Linkages */
 .drawer-section {
-  border-top: 1
+  border-top: 1px solid #E2E7F0;
+  padding-top: 0.8rem;
+}
+
+.drawer-section-title {
+  margin: 0 0 0.48rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--navy);
+}
+
+.conn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.42rem;
+}
+
+.conn-btn {
+  width: 100%;
+  text-align: left;
+  padding: 0.52rem 0.68rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #E2E7F0;
+  background: #F8F9FC;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  transition: border-color var(--ease), background var(--ease);
+}
+
+.conn-btn:hover {
+  border-color: var(--navy);
+  background: var(--navy-soft);
+}
+
+.conn-btn.type-handoff { border-left: 3.5px solid var(--link-handoff); }
+.conn-btn.type-theory { border-left: 3.5px solid var(--link-theory); }
+.conn-btn.type-spiral { border-left: 3.5px solid var(--link-spiral); }
+
+.conn-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+}
+
+.conn-reason {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+/* Collapsible Objectives & TLO Accordion */
+.accordion {
+  border: 1px solid #E2E7F0;
+  border-radius: var(--radius-md);
+  background: #F9FAFC;
+  overflow: hidden;
+}
+
+.accordion summary {
+  padding: 0.62rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--navy);
+  cursor: pointer;
+  user-select: none;
+}
+
+.accordion-body {
+  padding: 0 0.85rem 0.85rem;
+  font-size: 0.81rem;
+}
+
+.accordion-body ul {
+  margin: 0.2rem 0 0.75rem;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.24rem;
+}
+
+.tlo-row {
+  padding: 0.36rem 0.52rem;
+  margin-bottom: 0.3rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid #E2E7F0;
+  font-size: 0.77rem;
+}
+
+.drawer-footer-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #E2E7F0;
+  margin-top: auto;
+}
