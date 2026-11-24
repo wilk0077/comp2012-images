@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UX Rescue Lab — Evidence Card Deck</title>
+  <link rel="stylesheet" href="evidence-cards.css">
+</head>
+<body>
+
+  <header class="lab-header">
+    <div class="header-brand">
+      <span class="badge-tag">UX RESCUE LAB // WEEK 2</span>
+      <h1>Field Intelligence: Evidence Deck</h1>
+    </div>
+    <div class="deck-controls">
+      <button id="btn-draw" class="btn btn-primary" type="button">Draw Next Card</button>
+      <button id="btn-shuffle" class="btn btn-secondary" type="button">Shuffle Remaining</button>
+      <button id="btn-reset" class="btn btn-outline" type="button">Reset Deck</button>
+    </div>
+  </header>
+
+  <main class="desk-workspace">
+    
+    <!-- Left: Interactive Physical Card Deck -->
+    <section class="deck-zone" aria-label="Evidence Card Deck">
+      <div class="deck-stack" id="deck-stack" role="button" tabindex="0" aria-label="Click to draw an evidence card">
+        <div class="deck-card-back layer-3"></div>
+        <div class="deck-card-back layer-2"></div>
+        <div class="deck-card-back layer-1">
+          <div class="back-stamp">
+            <span class="stamp-org">UX RESCUE LAB</span>
+            <span class="stamp-title">CASE FILE<br>EVIDENCE</span>
+            <span class="stamp-sub">Click to Draw</span>
+          </div>
+        </div>
+      </div>
+      <div class="deck-status">
+        <span id="remaining-count">12</span> cards remaining in deck
+      </div>
+    </section>
+
+    <!-- Right: Active Drawn Index Card Stage -->
+    <section class="stage-zone" aria-live="polite" aria-label="Active Evidence Card">
+      <div id="card-stage" class="card-stage">
+        <div class="empty-stage-prompt">
+          <p><strong>No card drawn yet.</strong></p>
+          <p>Click the deck on the left (or press <em>Draw Next Card</em>) to inspect your first piece of Community Connect field intelligence.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom: Drawn Case File Tray (Click any previously drawn card to re-inspect) -->
+  <section class="tray-zone" aria-label="Drawn Evidence Cards">
+    <div class="tray-header">
+      <h2>Drawn Case File (<span id="drawn-count">0</span> / 12)</h2>
+      <span class="tray-hint">Click any drawn card tab below to bring it back to the desk.</span>
+    </div>
+    <div id="drawn-tray" class="drawn-tray"></div>
+  </section>
+
+  <script src="evidence-cards.js"></script>
+</body>
+</html>
